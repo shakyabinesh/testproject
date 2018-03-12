@@ -12,14 +12,14 @@
 *}
 
 <nav id="cbp-hrmenu1" class="cbp-hrmenu  iqitmegamenu-all cbp-vertical {if !isset($ontop)}cbp-not-on-top{/if}">
-	<div class="cbp-vertical-title"><i class="fa fa-bars cbp-iconbars"></i> <span class="cbp-vertical-title-text">{l s='Categories' mod='iqitmegamenu'}</span></div>
+	<div class="cbp-vertical-title"><i class="fa fa-bars cbp-iconbars"></i> <span class="cbp-vertical-title-text">{l s='Navigation' mod='iqitmegamenu'}</span></div>
 					<ul id="cbp-hrmenu1-ul">
 						{foreach $vertical_menu as $tab}
 						<li id="cbp-hrmenu-tab-{$tab.id_tab}" class="cbp-hrmenu-tab cbp-hrmenu-tab-{$tab.id_tab} {if $tab.active_label} cbp-onlyicon{/if}{if $tab.float} pull-right cbp-pulled-right{/if}">
 	{if $tab.url_type == 2}<a role="button" class="cbp-empty-mlink">{else}<a href="{$tab.url}" onclick="" {if $tab.new_window}target="_blank"{/if}>{/if}
 								{if $tab.icon_type && !empty($tab.icon_class)} <i class="fa fa {$tab.icon_class} cbp-mainlink-icon"></i>{/if}
 								{if !$tab.icon_type && !empty($tab.icon)} <img src="{$tab.icon}" alt="{$tab.title}" class="cbp-mainlink-iicon" />{/if}
-								{if !$tab.active_label}<span>{$tab.title|replace:'/n':'<br />'}</span>{/if}{if $tab.submenu_type} <i class="fa fa-angle-right cbp-submenu-aindicator"></i>{/if}
+								{if !$tab.active_label}<span>{$tab.title|replace:'/n':'<br />' nofilter}</span>{/if}{if $tab.submenu_type} <i class="fa fa-angle-right cbp-submenu-aindicator"></i>{/if}
 								{if !empty($tab.label)}<span class="label cbp-legend cbp-legend-vertical cbp-legend-main">{if !empty($tab.legend_icon)} <i class="fa fa {$tab.legend_icon} cbp-legend-icon"></i>{/if} {$tab.label}
 								<span class="cbp-legend-arrow"></span></span>{/if}
 						</a>

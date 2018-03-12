@@ -28,13 +28,18 @@
     <link rel="canonical" href="{$product.canonical_url}">
 {/block}
 
-{block name='head' append}
+
+{block name='head_og_tags'}
     <meta property="og:type" content="product">
     <meta property="og:url" content="{$urls.current_url}">
     <meta property="og:title" content="{$page.meta.title}">
     <meta property="og:site_name" content="{$shop.name}">
     <meta property="og:description" content="{$page.meta.description}">
     <meta property="og:image" content="{$product.cover.large.url}">
+{/block}
+
+
+{block name='head' append}
     <meta property="product:pretax_price:amount" content="{$product.price_tax_exc}">
     <meta property="product:pretax_price:currency" content="{$currency.iso_code}">
     <meta property="product:price:amount" content="{$product.price_amount}">
@@ -56,6 +61,8 @@
 
 {block name='content'}
     <section id="main" itemscope itemtype="https://schema.org/Product">
+        <div id="product-preloader"><i class="fa fa-circle-o-notch fa-spin"></i></div>
+        <div id="main-product-wrapper">
         <meta itemprop="url" content="{$product.url}">
 
         <div class="row product-info-row">
@@ -169,7 +176,7 @@
                                 {block name='product_pack'}
                                     {if $packItems}
                                         <section class="product-pack">
-                                            <h3 class="h4">{l s='This pack contains' d='Shop.Theme.Catalog'}</h3>
+                                            <p class="h4">{l s='This pack contains' d='Shop.Theme.Catalog'}</p>
                                             {foreach from=$packItems item="product_pack"}
                                                 {block name='product_miniature'}
                                                     {include file='catalog/_partials/miniatures/pack-product.tpl' product=$product_pack}
@@ -213,7 +220,7 @@
                     {block name='product_accessories_sidebar'}
                         {if $accessories}
                             <section class="product-accessories product-accessories-sidebar block">
-                                <h4 class="block-title"><span>{l s='You might also like' d='Shop.Theme.Catalog'}</span></h4>
+                                <p class="block-title"><span>{l s='You might also like' d='Shop.Theme.Catalog'}</span></p>
                                 <div id="product-accessories-sidebar" class="block-content products products-grid">
                                     {foreach from=$accessories item="product_accessory"}
                                         {block name='product_miniature'}
@@ -232,8 +239,7 @@
             {/if}
 
         </div>
-
-        {if $iqitTheme.pp_tabs== 'tabh'}
+        {if $iqitTheme.pp_tabs== 'tabh' || $iqitTheme.pp_tabs== 'tabha'}
             {include file='catalog/_partials/_product_partials/product-tabs-h.tpl'}
         {elseif $iqitTheme.pp_tabs== 'section'}
             {include file='catalog/_partials/_product_partials/product-tabs-sections.tpl'}
@@ -244,7 +250,7 @@
             {block name='product_accessories_footer'}
                 {if $accessories}
                     <section class="product-accessories block block-section">
-                        <h4 class="section-title">{l s='You might also like' d='Shop.Theme.Catalog'}</h4>
+                        <p class="section-title">{l s='You might also like' d='Shop.Theme.Catalog'}</p>
                         <div class="block-content">
                             <div class="products slick-products-carousel products-grid slick-default-carousel">
                                 {foreach from=$accessories item="product_accessory"}
@@ -274,5 +280,6 @@
                 {/block}
             </footer>
         {/block}
+        </div>
     </section>
 {/block}

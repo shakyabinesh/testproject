@@ -93,7 +93,7 @@ class IqitElementor extends Module implements WidgetInterface
     {
         $this->context->controller->addCSS($this->_path . 'views/css/backoffice.css');
 
-        $onlyElementor = 0;
+        $onlyElementor = array();
         $idLang = (int) $this->context->language->id;
 
         if (
@@ -109,43 +109,52 @@ class IqitElementor extends Module implements WidgetInterface
                 $idPage = (int) Tools::getValue('id_cms');
                 $pageType = 'cms';
 
-                $cms = new CMS($idPage, $idLang);
+                if($idPage){
+                    $cms = new CMS($idPage);
 
-                $strippedCms = preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/is', '$1', $cms->content);
-                $strippedCms = str_replace(array("\r\n", "\n", "\r"), '', $strippedCms);
-                $content = json_decode($strippedCms, true);
+                    foreach ($cms->content as $key => $contentLang ){
 
-                if (json_last_error() == JSON_ERROR_NONE){
-                    if (empty($content)){
-                        $onlyElementor = 0;
-                    } else{
-                        $onlyElementor = 1;
+                        $strippedCms = preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/is', '$1', $contentLang);
+                        $strippedCms = str_replace(array("\r\n", "\n", "\r"), '', $strippedCms);
+                        $content = json_decode($strippedCms, true);
+
+                        if (json_last_error() == JSON_ERROR_NONE){
+                            if (empty($content)){
+                                $onlyElementor[$key] = 0;
+                            } else{
+                                $onlyElementor[$key] = 1;
+                            }
+
+                        } else{
+                            $onlyElementor[$key] = 0;
+                        }
                     }
-
-                } else{
-                    $onlyElementor = 0;
                 }
 
             } elseif ($this->context->controller->controller_name == 'AdminSimpleBlogPosts'){
                 $idPage = (int) Tools::getValue('id_simpleblog_post');
                 $pageType = 'blog';
 
-                $cms = new SimpleBlogPost($idPage, $idLang);
+                if($idPage){
+                    $cms = new SimpleBlogPost($idPage);
 
-                $strippedCms = preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/is', '$1', $cms->content);
-                $strippedCms = str_replace(array("\r\n", "\n", "\r"), '', $strippedCms);
-                $content = json_decode($strippedCms, true);
+                    foreach ($cms->content as $key => $contentLang ){
 
+                        $strippedCms = preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/is', '$1', $contentLang);
+                        $strippedCms = str_replace(array("\r\n", "\n", "\r"), '', $strippedCms);
+                        $content = json_decode($strippedCms, true);
 
-                if (json_last_error() == JSON_ERROR_NONE){
-                    if (empty($content)){
-                        $onlyElementor = 0;
-                    } else{
-                        $onlyElementor = 1;
+                        if (json_last_error() == JSON_ERROR_NONE){
+                            if (empty($content)){
+                                $onlyElementor[$key] = 0;
+                            } else{
+                                $onlyElementor[$key] = 1;
+                            }
+
+                        } else{
+                            $onlyElementor[$key] = 0;
+                        }
                     }
-
-                } else{
-                    $onlyElementor = 0;
                 }
 
             }
@@ -174,6 +183,10 @@ class IqitElementor extends Module implements WidgetInterface
                     'urlElementor' => $url
                 ));
             }
+
+            Media::addJsDef(array(
+                'onlyElementor'  =>  $onlyElementor
+            ));
 
             $this->context->smarty->assign(array(
                 'onlyElementor' => $onlyElementor,

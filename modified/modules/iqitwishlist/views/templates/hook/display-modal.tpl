@@ -26,7 +26,7 @@
             <div class="modal-body">
                 <section class="login-form">
                    <p> {l s='Save products on your wishlist to buy them later or share with your friends.' mod='iqitwishlist'}</p>
-                    {render file='customer/_partials/login-form.tpl' ui=$login_form wishlistModal=true}
+                    {render file='customer/_partials/login-form.tpl' idForm='login-form-modal' ui=$login_form wishlistModal=true}
                 </section>
                 <hr/>
                 {block name='display_after_login_form'}

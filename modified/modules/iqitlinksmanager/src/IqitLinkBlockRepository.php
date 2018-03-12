@@ -83,6 +83,7 @@ class IqitLinkBlockRepository
                 h.`name` as hook_name,
                 h.`title` as hook_title,
                 h.`description` as hook_description,
+                bcl.`id_lang`  as id_lang,
                 bc.`position`
             FROM `' . _DB_PREFIX_ . 'iqit_link_block` bc
                 INNER JOIN `' . _DB_PREFIX_ . 'iqit_link_block_shop` bcs 
@@ -91,10 +92,21 @@ class IqitLinkBlockRepository
                     ON (bc.`id_iqit_link_block` = bcl.`id_iqit_link_block`)
                 LEFT JOIN `' . _DB_PREFIX_ . 'hook` h
                     ON (bc.`id_hook` = h.`id_hook`)
-            WHERE bcs.`id_shop` = ' . $id_shop . ' AND bcl.`id_lang` = ' . $id_lang . '
+            WHERE bcs.`id_shop` = ' . $id_shop . '
             ORDER BY bc.`position`';
 
-        $blocks = Db::getInstance()->executeS($sql);
+        $blocksSrc = Db::getInstance()->executeS($sql);
+        $blocks = array();
+        foreach ($blocksSrc as $key => $block) {
+
+
+            if ($block['id_lang'] == $id_lang && $block['block_name'] != ''){
+                $blocks[$block['id_iqit_link_block']] = $block;
+                unset($block);
+            } else{
+                $blocks[$block['id_iqit_link_block']] = $block;
+            }
+        }
 
         $orderedBlocks = array();
         foreach ($blocks as $block) {
@@ -116,6 +128,7 @@ class IqitLinkBlockRepository
             unset($block['hook_name']);
             unset($block['hook_title']);
             unset($block['hook_description']);
+
             $orderedBlocks[$id_hook]['blocks'][] = $block;
         }
 
@@ -166,6 +179,83 @@ class IqitLinkBlockRepository
         }
 
         return $cmsBlock;
+    }
+
+    public function getCategories($id_lang = null) {
+
+        $id_lang = (int) (($id_lang) ?: Context::getContext()->language->id);
+        $catSource = $this->customGetNestedCategories($this->shop->id, null, (int)$id_lang, false);
+
+        return $this->buildCategoryTree($catSource, $parentId = 0);
+    }
+
+    public function buildCategoryTree(array &$elements, $parentId = 0)
+    {
+        $branch = array();
+
+        foreach ($elements as $element) {
+            if ($element['id_parent'] == $parentId) {
+                $children = $this->buildCategoryTree($elements, $element['id_category']);
+                if ($children) {
+                    $element['children'] = $children;
+                }
+                $branch[$element['id_category']] = $element;
+                unset($elements[$element['id_category']]);
+            }
+        }
+        return $branch;
+    }
+
+    public function customGetNestedCategories($shop_id, $root_category = null, $id_lang = false, $active = false, $groups = null, $use_shop_restriction = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
+    {
+        if (isset($root_category) && !Validate::isInt($root_category)) {
+            die(Tools::displayError());
+        }
+
+        if (!Validate::isBool($active)) {
+            die(Tools::displayError());
+        }
+
+        if (isset($groups) && Group::isFeatureActive() && !is_array($groups)) {
+            $groups = (array)$groups;
+        }
+
+        $cache_id = 'Category::getNestedCategories_'.md5((int)$shop_id.(int)$root_category.(int)$id_lang.(int)$active.(int)$active
+                .(isset($groups) && Group::isFeatureActive() ? implode('', $groups) : ''));
+
+        if (!Cache::isStored($cache_id)) {
+            $result = Db::getInstance()->executeS('
+							SELECT c.*, cl.*
+				FROM `'._DB_PREFIX_.'category` c
+				INNER JOIN `'._DB_PREFIX_.'category_shop` category_shop ON (category_shop.`id_category` = c.`id_category` AND category_shop.`id_shop` = "'.(int)$shop_id.'")
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_shop` = "'.(int)$shop_id.'")
+				WHERE 1 '.$sql_filter.' '.($id_lang ? 'AND cl.`id_lang` = '.(int)$id_lang : '').'
+				'.($active ? ' AND (c.`active` = 1 OR c.`is_root_category` = 1)' : '').'
+				'.(isset($groups) && Group::isFeatureActive() ? ' AND cg.`id_group` IN ('.implode(',', $groups).')' : '').'
+				'.(!$id_lang || (isset($groups) && Group::isFeatureActive()) ? ' GROUP BY c.`id_category`' : '').'
+				'.($sql_sort != '' ? $sql_sort : ' ORDER BY c.`level_depth` ASC').'
+				'.($sql_sort == '' && $use_shop_restriction ? ', category_shop.`position` ASC' : '').'
+				'.($sql_limit != '' ? $sql_limit : '')
+            );
+
+            $categories = array();
+            $buff = array();
+
+            foreach ($result as $row) {
+                $current = &$buff[$row['id_category']];
+                $current = $row;
+
+                if ($row['id_parent'] == 0) {
+                    $categories[$row['id_category']] = &$current;
+                } else {
+                    $buff[$row['id_parent']]['children'][$row['id_category']] = &$current;
+                }
+            }
+
+            Cache::store($cache_id, $categories);
+        }
+
+        return Cache::retrieve($cache_id);
     }
 
     public function getCmsPages($id_lang = null)

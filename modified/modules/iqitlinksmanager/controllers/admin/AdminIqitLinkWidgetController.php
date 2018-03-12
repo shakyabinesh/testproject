@@ -211,6 +211,7 @@ class AdminIqitLinkWidgetController extends ModuleAdminController
         $helper->fields_value = (array) $block;
 
         $helper->tpl_vars = array(
+            'category_tree' => $this->repository->getCategories(),
             'cms_tree' => $this->repository->getCmsPages(),
             'static_pages' => $this->repository->getStaticPages(),
             'selected_links' => $this->presenter->makeLinks($block->content)
@@ -243,7 +244,7 @@ class AdminIqitLinkWidgetController extends ModuleAdminController
         $this->toolbar_title[] = $this->l('Iqit Links Manager"');
     }
 
-    public function setMedia($isNewTheme = false)
+    public function setMedia()
     {
         parent::setMedia();
         $this->addJqueryPlugin('tablednd');

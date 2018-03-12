@@ -47,7 +47,7 @@
                 <h3>{l s='Share your wishlist' mod='iqitwishlist'}</h3>
                 <div class="input-group">
                     <input class="form-control js-to-clipboard" readonly="readonly" type="url"
-                           value="{url entity='module' name='iqitwishlist' controller='view' params=['wishlistToken' => $token]}">
+                           value="{url entity='module' name='iqitwishlist' relative_protocol=false controller='view' params=['wishlistToken' => $token]}">
                     <span class="input-group-btn">
                         <button class="btn" type="button" id="iqitwishlist-clipboard-btn"
                                 data-text-copied="{l s='Copied' mod='iqitwishlist'}"

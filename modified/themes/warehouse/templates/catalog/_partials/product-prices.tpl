@@ -26,9 +26,23 @@
 
 
     <div class="product-prices">
+
+        {block name='product_reference'}
+            {if $iqitTheme.pp_reference == 'title'}
+            {if isset($product.reference_to_display)}
+                <div class="product-reference">
+                    <label class="label">{l s='Reference' d='Shop.Theme.Catalog'} </label>
+                    <span itemprop="sku">{$product.reference_to_display}</span>
+                </div>
+            {/if}
+            {/if}
+        {/block}
+
         {block name='hook_display_product_rating'}
             {hook h='displayProductRating' product=$product}
         {/block}
+
+
         {if $product.show_price}
         {if !$configuration.is_catalog}
             {block name='product_availability'}
@@ -36,7 +50,7 @@
                     <span id="product-availability"
                           class="badge {if $product.availability == 'available'}badge-success product-available{elseif $product.availability == 'last_remaining_items'}badge-warning product-last-items{else}badge-danger product-unavailable{/if}">
                   {if $product.availability == 'available'}
-                      <i class="fa fa-check" aria-hidden="true"></i>
+                      <i class="fa fa-check rtl-no-flip" aria-hidden="true"></i>
                                                      {$product.availability_message}
                   {elseif $product.availability == 'last_remaining_items'}
                       <i class="fa fa-exclamation" aria-hidden="true"></i>
@@ -123,6 +137,17 @@
             {/if}
             {hook h='displayProductPriceBlock' product=$product type="price"}
             {hook h='displayProductPriceBlock' product=$product type="after_price"}
+            {if $product.additional_delivery_times == 1}
+                {if $product.delivery_information}
+                    <span class="delivery-information">{$product.delivery_information}</span>
+                {/if}
+            {elseif $product.additional_delivery_times == 2}
+                {if $product.quantity > 0}
+                    <span class="delivery-information">{$product.delivery_in_stock}</span>
+                {else}
+                    <span class="delivery-information">{$product.delivery_out_stock}</span>
+                {/if}
+            {/if}
         </div>
         {hook h='displayCountDown'}
         {/if}

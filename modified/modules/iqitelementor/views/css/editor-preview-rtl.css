@@ -166,7 +166,7 @@ html.elementor-html {
       font-family: 'FontAwesome';
       margin-right: 5px; } }
 .elementor-editor-active #elementor .elementor-editor-widget-settings {
-  z-index: 2;
+  z-index: 4;
   top: 2px;
   left: 2px; }
   .elementor-editor-active #elementor .elementor-editor-widget-settings .elementor-editor-element-setting {

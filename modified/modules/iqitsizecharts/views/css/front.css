@@ -16,3 +16,7 @@
     text-decoration: line-through;
     opacity: 0.3;
 }
+
+#iqitsizecharts-modal .modal-dialog{
+    max-width: 960px;
+}

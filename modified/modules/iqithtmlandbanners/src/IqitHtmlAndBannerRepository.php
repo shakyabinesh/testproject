@@ -87,6 +87,7 @@ class IqitHtmlAndBannerRepository
                 h.`name` as hook_name,
                 h.`title` as hook_title,
                 h.`description` as hook_description,
+                bcl.`id_lang`  as id_lang,
                 bc.`position`
             FROM `' . _DB_PREFIX_ . 'iqit_htmlandbanner` bc
                 INNER JOIN `' . _DB_PREFIX_ . 'iqit_htmlandbanner_shop` bcs 
@@ -95,10 +96,22 @@ class IqitHtmlAndBannerRepository
                     ON (bc.`id_iqit_htmlandbanner` = bcl.`id_iqit_htmlandbanner`)
                 LEFT JOIN `' . _DB_PREFIX_ . 'hook` h
                     ON (bc.`id_hook` = h.`id_hook`)
-            WHERE bcs.`id_shop` = ' . $id_shop . ' AND bcl.`id_lang` = ' . $id_lang . '
+            WHERE bcs.`id_shop` = ' . $id_shop . '
             ORDER BY bc.`position`';
 
-        $blocks = Db::getInstance()->executeS($sql);
+        $blocksSrc = Db::getInstance()->executeS($sql);
+        $blocks = array();
+        foreach ($blocksSrc as $key => $block) {
+
+
+            if ($block['id_lang'] == $id_lang && $block['block_name'] != ''){
+                $blocks[$block['id_iqit_htmlandbanner']] = $block;
+                unset($block);
+            } else{
+                $blocks[$block['id_iqit_htmlandbanner']] = $block;
+            }
+        }
+
 
         $orderedBlocks = array();
         foreach ($blocks as $block) {

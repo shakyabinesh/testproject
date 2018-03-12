@@ -31,7 +31,7 @@
 {block name='page_content'}
   {block name='cms_sub_categories'}
     {if $sub_categories}
-      <p>{l s='List of sub categories in %name%:' d='Shop.Theme.Global' sprintf=['%name%' => $cms_category.name]}</p>
+      <p>{l s='List of pages in %category_name%:' d='Shop.Theme.Global' sprintf=['%category_name%' => $cms_category.name]}</p>
       <ul>
         {foreach from=$sub_categories item=sub_category}
           <li><a href="{$sub_category.link}">{$sub_category.name}</a></li>

@@ -28,6 +28,10 @@ jQuery.fn.filterByText = function(textbox, selectSingleMatch) {
 };
 
 $(function() {
+	$('#ph_relatedposts_right option').each(function(i){
+		$(this).prop('selected', true)
+	});
+
 	$('#ph_relatedposts_left').filterByText($('#related_posts_filter'), true);
 	$('#ph_relatedposts_move_to_right').click(function(){
 		return !$('#ph_relatedposts_left option:selected').remove().appendTo('#ph_relatedposts_right');
@@ -48,5 +52,6 @@ $(function() {
 			$(this).prop('selected', true)
 		});
 	});
+
 
 });

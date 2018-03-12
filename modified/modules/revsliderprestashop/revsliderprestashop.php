@@ -1,34 +1,32 @@
 <?php
 /**
- * 2016 Revolution Slider
- *
- *  @author    SmatDataSoft <support@smartdatasoft.com>
- *  @copyright 2016 SmatDataSoft
- *  @license   private
- *  @version   5.1.6
- *  International Registered Trademark & Property of SmatDataSoft
- */
+* 2017 Revolution Slider
+*
+*  @author    SmatDataSoft <support@smartdatasoft.com>
+*  @copyright 2017 SmatDataSoft
+*  @license   private
+*  @version   5.4.2
+*  International Registered Trademark & Property of SmatDataSoft
+*/
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 if (!defined('_REV_VERSION_')) {
-    define('_REV_VERSION_', '5.1.7');
+    define('_REV_VERSION_', '5.4.2');
 }
 if (!defined('__DIR__')) {
     define('__DIR__', dirname(__FILE__));
 }
 if (!defined('RS_DEMO')) {
-    define('RS_DEMO', false);
+    define( 'RS_DEMO', false );
 }
 
-use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
-
 $currentFolder = _PS_MODULE_DIR_ . 'revsliderprestashop';
-require_once $currentFolder . '/revprestashoploader.php';
-require_once $currentFolder . '/revslider_admin.php';
+require_once $currentFolder . '/revslider-loader.php';
+require_once $currentFolder . '/revslider-admin.class.php';
 
-class RevsliderPrestashop extends Module implements WidgetInterface
+class RevsliderPrestashop extends Module
 {
 
     public static $wpdb;
@@ -45,15 +43,17 @@ class RevsliderPrestashop extends Module implements WidgetInterface
         $this->author = 'smartdatasoft';
         $this->need_instance = 0;
         $this->secure_key = Tools::encrypt($this->name);
-        $this->addAsTrusted();
+       // $this->addAsTrusted();
         $this->module_key = "c26f80de213c6794543753a95e53d2f6";
-        parent::__construct();
+        
 
-        $this->version = '5.1.7';
+        $this->version = '5.4.2';
+        parent::__construct();
         if (@RevsliderPrestashop::getIsset($this->context->controller->admin_webpath)) {
             self::$lang = $this->getLang();
         }
-        self::$wpdb = rev_db_class::revDbInstance();
+        self::$wpdb = rev_db_class::rev_db_instance();
+        
         self::$_url = $this->_path;
         $this->displayName = $this->l('Revolution Slider.');
         $this->description = $this->l('Revolution Slider - Premium responsive Prestashop slider');
@@ -173,6 +173,8 @@ class RevsliderPrestashop extends Module implements WidgetInterface
                 'shortcode_could_not_be_correctly_parsed' => $this->l('Shortcode could not be parsed.')
             )
         );
+        
+       
     }
 
     public static function getInstance()
@@ -183,7 +185,7 @@ class RevsliderPrestashop extends Module implements WidgetInterface
     public static function revSliderShortcode($args)
     {
         if (!class_exists('RevSliderFront')) {
-            require_once dirname(__FILE__) . '/revslider_front.php';
+            require_once dirname(__FILE__) . '/revslider-front.class.php';
             new RevSliderFront(ABSPATH);
         }
         $sliderAlias = UniteFunctionsRev::getVal($args, 0);
@@ -213,8 +215,6 @@ class RevsliderPrestashop extends Module implements WidgetInterface
     public function install()
     {
         if (parent::install() && $this->registerHook('displayHeader') && $this->registerHook('displayBackOfficeHeader') && $this->registerHook('displayRevSlider') && $this->moduleControllerRegistration() && $this->registerHook('actionShopDataDuplication')) {
-            $this->registerHook('displayHome');
-            $this->registerHook('displayTopColumn');
             $gethooks = array();
             require_once ABSPATH . "/hook/hook.php";
             foreach (array_keys($gethooks) as $hook) {
@@ -222,12 +222,12 @@ class RevsliderPrestashop extends Module implements WidgetInterface
                     $this->registerHook($hook);
                 }
             }
-            require_once ABSPATH . "/revslider_admin.php";
+            require_once ABSPATH . "/revslider-admin.class.php";
             $res = RevSliderAdmin::onActivate();
-            new RevSliderAdmin(ABSPATH, false);
-            RevSliderAdmin::sdsCaptionCssInit($res);
-            $this->installQuickAccess();
-            $this->clearStaticStyles();
+//            new RevSliderAdmin(ABSPATH, false);
+//            RevSliderAdmin::sdsCaptionCssInit($res);
+           // $this->installQuickAccess();
+//            $this->clearStaticStyles();
             return (bool) $res;
         }
         return false;
@@ -237,7 +237,7 @@ class RevsliderPrestashop extends Module implements WidgetInterface
     {
         if (parent::uninstall()) {
             $res = $this->moduleControllerUnRegistration();
-            require_once ABSPATH . "/revslider_admin.php";
+            require_once ABSPATH . "/revslider-admin.class.php";
             $res &= RevSliderAdmin::deleteDBTables();
             $res &= Configuration::deleteByName('sds_rev_hooks');
             $res &= Configuration::deleteByName('tp-google-fonts');
@@ -249,127 +249,68 @@ class RevsliderPrestashop extends Module implements WidgetInterface
 
     public function clearStaticStyles()
     {
-        if (file_exists(ABSPATH . '/views/css/rs-plugin/css/static-captions.css')) {
-            file_put_contents(ABSPATH . '/views/css/rs-plugin/css/static-captions.css', '');
+        if (file_exists(ABSPATH . '/public/assets/css/static-captions.css')) {
+            file_put_contents(ABSPATH . '/public/assets/css/static-captions.css', '');
         }
     }
 
     public function hookdisplayHeader()
     {
-        $css_url = "{$this->_path}views/css/";
-        $js_url = "{$this->_path}views/js/";
-
-        $this->context->controller->addCSS($css_url . 'rs-plugin/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css');
-        $this->context->controller->addCSS($css_url . 'rs-plugin/css/settings.css');
-        $this->context->controller->addCSS($css_url . 'rs-plugin/css/static-captions.css');
-        $this->context->controller->addCSS($css_url . 'rs-plugin/css/dynamic-captions.css');
+        $css_url = "{$this->_path}public/assets/";
+        $js_url = "{$this->_path}public/assets/";
+        
+        $this->context->controller->addCSS($css_url . 'fonts/font-awesome/css/font-awesome.css');
+        $this->context->controller->addCSS($css_url . 'fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css');
+        $this->context->controller->addCSS($css_url . 'css/settings.css');
+        $this->context->controller->addCSS($css_url . 'css/static-captions.css');
+        $this->context->controller->addCSS($css_url . 'css/dynamic-captions.css');
         $this->context->controller->addCSS($css_url . 'css/front.css');
-//        $this->context->controller->registerJavascript('jquery', 'js/jquery/jquery-1.11.0.min.js', ['position' => 'head', 'priority' => 0]);
-//        $this->context->controller->registerJavascript('jquery-themepunch-tools','modules/'.$this->name.'/views/js/rs-plugin/js/jquery.themepunch.tools.min.js',['position' => 'head', 'priority' => 1]);
-//        $this->context->controller->registerJavascript('jquery-themepunch-revolution','modules/'.$this->name.'/views/js/rs-plugin/js/jquery.themepunch.revolution.js',['position' => 'head', 'priority' => 2]);
-        $this->context->controller->addJS($js_url . 'rs-plugin/js/jquery.themepunch.tools.min.js');
-        $this->context->controller->addJS($js_url . 'rs-plugin/js/jquery.themepunch.revolution.min.js');
-        $pf = new ThemePunchFonts();
-        $pf->registerFonts();
         
-        $content = '<script type="text/javascript">';
-        
-        $content .= 'var SdsJsOnLoadActions = [];';
-        $content .= 'window.onload=function(){ $.each(SdsJsOnLoadActions, function(k, func){ func.call(); }); };';
-        
-        $content .= '</script>';
+        if(_PS_VERSION_ >= 1.7){
+//            $this->context->controller->registerJavascript('modules-revsliderprestashop1', 'modules/'.$this->name.'/public/assets/js/jquery-1.11.0.min.js', ['position' => 'head', 'priority' => 1500]);        
+//             $this->context->controller->registerJavascript('modules-revsliderprestashop2', 'modules/'.$this->name.'/public/assets/js/jquery-migrate-1.2.1.min.js', ['position' => 'head', 'priority' => 1500]);
+                
+             $this->context->controller->registerJavascript('modules-revsliderprestashop12', 'modules/'.$this->name.'/public/assets/js/jquery.themepunch.tools.min.js', ['position' => 'bottom', 'priority' => 1500]);        
+             $this->context->controller->registerJavascript('modules-revsliderprestashop13', 'modules/'.$this->name.'/public/assets/js/jquery.themepunch.revolution.min.js', ['position' => 'bottom', 'priority' => 1500]);
 
-        Media::addJsDef(array(
-            'iqitRevolutionSlider' => [
-                'inlineFunctions' => array()
-            ]
-        ));
+                    $this->context->controller->registerJavascript('modules-revsliderprestashop3', 'modules/'.$this->name.'/public/assets/js/extensions/revolution.extension.actions.min.js', ['position' => 'bottom', 'priority' => 1500]);
+                    $this->context->controller->registerJavascript('modules-revsliderprestashop4', 'modules/'.$this->name.'/public/assets/js/extensions/revolution.extension.carousel.min.js', ['position' => 'bottom', 'priority' => 1500]);
+                    $this->context->controller->registerJavascript('modules-revsliderprestashop5', 'modules/'.$this->name.'/public/assets/js/extensions/revolution.extension.kenburn.min.js', ['position' => 'bottom', 'priority' => 1500]);
+                    $this->context->controller->registerJavascript('modules-revsliderprestashop6', 'modules/'.$this->name.'/public/assets/js/extensions/revolution.extension.layeranimation.min.js', ['position' => 'bottom', 'priority' => 1500]);
+                    $this->context->controller->registerJavascript('modules-revsliderprestashop7', 'modules/'.$this->name.'/public/assets/js/extensions/revolution.extension.migration.min.js', ['position' => 'bottom', 'priority' => 1500]);
+                    $this->context->controller->registerJavascript('modules-revsliderprestashop8', 'modules/'.$this->name.'/public/assets/js/extensions/revolution.extension.navigation.min.js', ['position' => 'bottom', 'priority' => 1500]);
+                    $this->context->controller->registerJavascript('modules-revsliderprestashop9', 'modules/'.$this->name.'/public/assets/js/extensions/revolution.extension.parallax.min.js', ['position' => 'bottom', 'priority' => 1500]);
+                    $this->context->controller->registerJavascript('modules-revsliderprestashop10', 'modules/'.$this->name.'/public/assets/js/extensions/revolution.extension.slideanims.min.js', ['position' => 'bottom', 'priority' => 1500]);
+                    $this->context->controller->registerJavascript('modules-revsliderprestashop11', 'modules/'.$this->name.'/public/assets/js/extensions/revolution.extension.video.min.js', ['position' => 'bottom', 'priority' => 1500]);   
+             }else{
+                    $this->context->controller->addJS($js_url . 'js/jquery.themepunch.tools.min.js');
+                    $this->context->controller->addJS($js_url . 'js/jquery.themepunch.revolution.min.js');
+
+                    $this->context->controller->addJS($js_url . 'js/extensions/revolution.extension.actions.min.js');
+                    $this->context->controller->addJS($js_url . 'js/extensions/revolution.extension.carousel.min.js');
+                    $this->context->controller->addJS($js_url . 'js/extensions/revolution.extension.kenburn.min.js');
+                    $this->context->controller->addJS($js_url . 'js/extensions/revolution.extension.layeranimation.min.js');
+                    $this->context->controller->addJS($js_url . 'js/extensions/revolution.extension.migration.min.js');
+                    $this->context->controller->addJS($js_url . 'js/extensions/revolution.extension.navigation.min.js');
+                    $this->context->controller->addJS($js_url . 'js/extensions/revolution.extension.parallax.min.js');
+                    $this->context->controller->addJS($js_url . 'js/extensions/revolution.extension.slideanims.min.js');
+                    $this->context->controller->addJS($js_url . 'js/extensions/revolution.extension.video.min.js'); 
+                }
         
-        return $content;
+        
+//        $pf = new ThemePunchFonts();
+//        $pf->registerFonts();
     }
 
     public function hookdisplayBackOfficeHeader()
     {
-
+                
 //        if(!Module::isEnabled($this->name)) return;
-        $css_url = "{$this->_path}views/css/";
-
-        Media::addJsDef(array('iqitRevolutionSlider' => ['inlineFunctions' => []]));
-
-        $this->context->controller->addCSS($css_url . 'css/adminicon.css');
+        $css_url = "{$this->_path}admin/assets/css/adminicon.css";
+                
+        $this->context->controller->addCSS($css_url);
         UniteFunctionsWPRev::initStaticVars();
-        if (Tools::getvalue('configure') == 'revsliderprestashop') {
-            $js_vars = '';
-            if (Tools::version_compare(_PS_VERSION_, '1.6.0.9', '>')) {
-                Media::addJsDef(self::$_revSliderJSON);
-
-                if (is_ssl()) {
-                    Media::addJsDef(array('ps_is_ssl_enabled' => true));
-                }
-
-                $validated = Configuration::get('revslider-valid');
-                Media::addJsDef(array('rs_plugin_validated' => ($validated == 'true' ? true : false)));
-
-                $arr = array(
-                    'configure' => 'revsliderprestashop',
-                    'module_name' => 'revsliderprestashop',
-                    'tab_module' => 'front_office_features',
-                );
-
-                $backofficeurl = $this->context->link->getAdminLink('AdminModules');
-                $backofficeurl .= '&' . http_build_query($arr);
-                Media::addJsDef(array('revsliderbackoffice' => $backofficeurl));
-            } else {
-                // new code for lower versions.
-
-
-
-                $js_vars .= 'var rev_lang = ' . Tools::jsonEncode(self::$_revSliderJSON['rev_lang']) . ";\n";
-
-                if (is_ssl()) {
-                    $js_vars .= 'var ps_is_ssl_enabled = true' . ";\n";
-                }
-
-                $validated = Configuration::get('revslider-valid');
-                $js_vars .= 'var rs_plugin_validated = ' . ($validated == 'true' ? 'true' : 'false') . ";\n";
-
-                $arr = array(
-                    'configure' => 'revsliderprestashop',
-                    'module_name' => 'revsliderprestashop',
-                    'tab_module' => 'front_office_features',
-                );
-
-                $backofficeurl = $this->context->link->getAdminLink('AdminModules');
-                $backofficeurl .= '&' . http_build_query($arr);
-                $js_vars .= 'var revsliderbackoffice = "' . $backofficeurl . '";';
-
-                $this->smarty->assign('rev_1606_objects', $js_vars);
-
-                $js_vars = '<script type="text/javascript">' . $js_vars . '</script>';
-            }
-
-
-
-            $this->context->controller->addCSS($css_url . 'css/jui/new/jquery-ui-1.10.3.custom.min.css');
-            $this->context->controller->addCSS($css_url . 'css/admin.css');
-            $this->context->controller->addCSS($css_url . 'rs-plugin/fonts/font-awesome/css/font-awesome.css');
-            $this->context->controller->addCSS($css_url . 'rs-plugin/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css');
-            $this->context->controller->addCSS($css_url . 'css/tipsy.css');
-            $this->context->controller->addCSS($css_url . 'css/load-styles.css');
-            $this->context->controller->addCSS($css_url . 'css/farbtastic/farbtastic.css');
-            $this->context->controller->addCSS($css_url . 'css/codemirror/codemirror.css');
-            $this->context->controller->addCSS($css_url . 'css/edit_layers.css');
-            $this->context->controller->addCSS($css_url . 'css/thickbox.css');
-            $this->context->controller->addCSS($css_url . 'rs-plugin/css/settings.css');
-            $this->context->controller->addCSS($css_url . 'rs-plugin/css/static-captions.css');
-            $g_urlContent = UniteFunctionsWPRev::getUrlContent();
-            $dynamicadmincss = 'index.php?controller=AdminRevolutionsliderAjax&token=' . Context::getcontext()->controller->token . '&revControllerAction=captions';
-            $this->smarty->assign('dynamicadmincss', $dynamicadmincss);
-            $this->smarty->assign('g_urlContent', $g_urlContent);
-            $this->smarty->assign('this_path', "{$this->_path}views/js/");
-
-            return $js_vars . $this->display(__FILE__, 'views/templates/admin/revolution_admin.tpl');
-        }
+                
     }
 
     public function moduleControllerRegistration()
@@ -430,18 +371,6 @@ class RevsliderPrestashop extends Module implements WidgetInterface
 
     public function uploadControllerRegistration()
     {
-//        $tab = new Tab(null, Configuration::get('PS_LANG_DEAFULT'), Configuration::get('PS_SHOP_DEAFULT'));
-//        $tab->class_name = 'Revolutionslider_upload';
-//        $tab->id_parent = 0;
-//        $tab->module = $this->name;
-//        $tab->name = "Revolutionslider Upload Controller";
-//        $tab->position = 11;
-//        $tab->active = 0;
-//        $tab->add();
-//        if (!$tab->id) {
-//            return false;
-//        }
-//        Configuration::updateValue('REVOLUTION_CONTROLLER_TABS_UP', Tools::jsonEncode(array($tab->id)));
         return true;
     }
 
@@ -472,7 +401,9 @@ class RevsliderPrestashop extends Module implements WidgetInterface
 
     public function _prehook()
     {
-        require_once ABSPATH . "/revslider_front.php";
+         if (!class_exists('RevSliderFront')) {
+        require_once ABSPATH . "/revslider-front.class.php";
+         }
         $revfront = new RevSliderFront(ABSPATH);
         return $revfront;
     }
@@ -483,7 +414,7 @@ class RevsliderPrestashop extends Module implements WidgetInterface
         $sliders = self::$wpdb->getResults("SELECT * FROM " . self::$wpdb->prefix . GlobalsRevSlider::TABLE_SLIDERS_NAME);
         return $sliders;
     }
-
+                
     public function generateSlider($hookPosition = 'displayHome')
     {
         $cache_id = 'revslider_front_' . $hookPosition;
@@ -501,10 +432,10 @@ class RevsliderPrestashop extends Module implements WidgetInterface
                         if (@RevsliderPrestashop::getIsset($params->id_shop) && $params->id_shop != Shop::getContextShopID()) {
                             continue;
                         } else {
-                            $tp = (array) $params;
+                            $tp = (array)$params;
                             if (@RevsliderPrestashop::getIsset($params->displayhook) && $params->displayhook === $hookPosition) {
                                 RevSliderOutput::putSlider($slider->id, '');
-                            } elseif (@RevsliderPrestashop::getIsset($tp['displayhook']) && $tp['displayhook'] === $hookPosition) {
+                            }elseif (@RevsliderPrestashop::getIsset($tp['displayhook']) && $tp['displayhook'] === $hookPosition) {
                                 RevSliderOutput::putSlider($slider->id, '');
                             }
                         }
@@ -540,18 +471,10 @@ class RevsliderPrestashop extends Module implements WidgetInterface
 
     public function getContent()
     {
-        $content = '<script type="text/javascript">';
-        $content .= ' var ajaxurl = "' . $this->context->link->getAdminLink('AdminRevolutionsliderAjax') . '"  ; ';
-        $content .= '     </script>';
-//        require_once ABSPATH . "/inc_php/framework/update.class.php";
-        require_once ABSPATH . "/revslider_admin.php";
-        ob_start();
-        $productAdmin = new RevSliderAdmin(ABSPATH);
-        $content .= ob_get_contents();
-        ob_end_clean();
-        return $content;
+                Tools::redirectAdmin('index.php?controller=AdminRevslider&token='.Tools::getAdminTokenLite('AdminRevslider'));
     }
-    /*public function __call($function, $args)
+
+    public function __call($function, $args)
     {
         $hook = Tools::substr($function, 0, 4);
         if ($hook == 'hook') {
@@ -560,14 +483,6 @@ class RevsliderPrestashop extends Module implements WidgetInterface
         } else {
             return false;
         }
-    }*/
-    public function getWidgetVariables($hookName, array $configuration)
-    {
-        // nothing to do...
-    }
-    public function renderWidget($hookName, array $configuration)
-    {
-        return $this->generateSlider($hookName);
     }
 
     public function addAsTrusted()
@@ -1391,50 +1306,46 @@ class RevsliderPrestashop extends Module implements WidgetInterface
 
     public static function getIsset($var)
     {
-        return RevGlobalObject::getIsset($var);
+        return RevLoader::getIsset($var);
     }
-
     /**
-     * Private helper function for checked, selected, and disabled.
-     *
-     * Compares the first two arguments and if identical marks as $type
-     *
-     * @since 2.8.0
-     * @access private
-     *
-     * @param mixed  $helper  One of the values to compare
-     * @param mixed  $current (true) The other value to compare if not just true
-     * @param bool   $echo    Whether to echo or just return the string
-     * @param string $type    The type of checked|selected|disabled we are doing
-     * @return string html attribute or empty string
-     */
-    public static function checkedSelectedHelper($helper, $current, $echo, $type)
-    {
-        if ((string) $helper === (string) $current) {
+    * Private helper function for checked, selected, and disabled.
+    *
+    * Compares the first two arguments and if identical marks as $type
+    *
+    * @since 2.8.0
+    * @access private
+    *
+    * @param mixed  $helper  One of the values to compare
+    * @param mixed  $current (true) The other value to compare if not just true
+    * @param bool   $echo    Whether to echo or just return the string
+    * @param string $type    The type of checked|selected|disabled we are doing
+    * @return string html attribute or empty string
+    */
+    public static function checkedSelectedHelper( $helper, $current, $echo, $type ) {
+        if ( (string) $helper === (string) $current )
             $result = " $type='$type'";
-        } else {
+        else
             $result = '';
-        }
-        if ($echo) {
+
+        if ( $echo )
             echo $result;
-        }
+
         return $result;
     }
-
     /**
-     * Outputs the html selected attribute.
-     *
-     * Compares the first two arguments and if identical marks as selected
-     *
-     * @since 1.0.0
-     *
-     * @param mixed $selected One of the values to compare
-     * @param mixed $current  (true) The other value to compare if not just true
-     * @param bool  $echo     Whether to echo or just return the string
-     * @return string html attribute or empty string
-     */
-    public static function selected($selected, $current = true, $echo = true)
-    {
-        return self::checkedSelectedHelper($selected, $current, $echo, 'selected');
+    * Outputs the html selected attribute.
+    *
+    * Compares the first two arguments and if identical marks as selected
+    *
+    * @since 1.0.0
+    *
+    * @param mixed $selected One of the values to compare
+    * @param mixed $current  (true) The other value to compare if not just true
+    * @param bool  $echo     Whether to echo or just return the string
+    * @return string html attribute or empty string
+    */
+    public static function selected( $selected, $current = true, $echo = true ) {
+        return self::checkedSelectedHelper( $selected, $current, $echo, 'selected' );
     }
 }

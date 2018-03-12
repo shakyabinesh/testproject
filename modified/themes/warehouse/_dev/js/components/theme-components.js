@@ -121,6 +121,7 @@ export default class ThemeCompontents {
             $('#page-preloader').fadeOut('slow', function () {
                 $(this).remove();
             });
+            $('#main-page-content').removeAttr('style');
         });
 
     }

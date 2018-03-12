@@ -22,7 +22,8 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if isset($logged) AND $logged || Configuration::get('PH_BLOG_COMMENT_ALLOW_GUEST')}
+
+{if isset($customer) AND $customer.is_logged || Configuration::get('PH_BLOG_COMMENT_ALLOW_GUEST')}
 <form class="std clearfix" action="{$post->url|escape:'html':'UTF-8'}" method="post">
 	<fieldset>
 		<div class="box">

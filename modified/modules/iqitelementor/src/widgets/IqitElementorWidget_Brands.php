@@ -275,7 +275,7 @@ class IqitElementorWidget_Brands
                 );
                 if ($fileExist) {
                     $brands[$brand['id_manufacturer']]['name'] = $brand['name'];
-                    $brands[$brand['id_manufacturer']]['link'] = Context::getContext()->link->getManufacturerLink($brand, $brand['link_rewrite']);
+                    $brands[$brand['id_manufacturer']]['link'] = Context::getContext()->link->getManufacturerLink($brand['id_manufacturer'], $brand['link_rewrite']);
                     $brands[$brand['id_manufacturer']]['image'] = Context::getContext()->link->getManufacturerImageLink($brand['id_manufacturer'],
                         'small_default');
                 }

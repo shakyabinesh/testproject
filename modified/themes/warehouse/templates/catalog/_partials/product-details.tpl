@@ -1,11 +1,11 @@
 <div id="product-details" class="clearfix">
 {block name='product_features'}
-    {if $product.features}
+    {if $product.grouped_features}
         <section class="product-features">
             <dl class="data-sheet">
-                {foreach from=$product.features item=feature}
+                {foreach from=$product.grouped_features item=feature}
                     <dt class="name">{$feature.name}</dt>
-                    <dd class="value">{$feature.value}</dd>
+                    <dd class="value">{$feature.value|escape:'htmlall'|nl2br nofilter}</dd>
                 {/foreach}
             </dl>
         </section>
@@ -36,11 +36,13 @@
 
 
 {block name='product_reference'}
+    {if $iqitTheme.pp_reference == 'details'}
     {if isset($product.reference_to_display)}
         <div class="product-reference">
             <label class="label">{l s='Reference' d='Shop.Theme.Catalog'} </label>
             <span itemprop="sku">{$product.reference_to_display}</span>
         </div>
+    {/if}
     {/if}
 {/block}
 

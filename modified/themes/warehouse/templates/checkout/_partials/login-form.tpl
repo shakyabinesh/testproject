@@ -24,6 +24,10 @@
  *}
 {extends file='customer/_partials/login-form.tpl'}
 
+{block name='login_form_start'}
+<div class="collapse {if $errors['']|count}show{/if}" id="personal-information-step-login">
+{/block}
+
 {block name='form_buttons'}
   <button
     class="continue btn btn-primary btn-block btn-lg"
@@ -35,3 +39,7 @@
     {l s='Sign in' d='Shop.Theme.Actions'}
   </button>
 {/block}
+
+  {block name='login_form_end'}
+</div>
+    {/block}

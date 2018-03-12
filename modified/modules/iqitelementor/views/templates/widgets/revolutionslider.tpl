@@ -27,6 +27,10 @@
 
 {if $widgetPreview}
 <script type="text/javascript">
-    {literal}$.each(iqitRevolutionSlider.inlineFunctions, function(_,f) { f(); });{/literal}
+    {literal}
+    var DOMContentLoaded_event = document.createEvent("Event");
+    DOMContentLoaded_event.initEvent("DOMContentLoaded", true, true);
+    window.document.dispatchEvent(DOMContentLoaded_event);
+    {/literal}
 </script>
 {/if}

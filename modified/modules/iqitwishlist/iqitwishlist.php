@@ -190,7 +190,9 @@ class IqitWishlist extends Module implements WidgetInterface
             $templateFile = 'display-modal.tpl';
         } elseif (preg_match('/^displayHeaderButtons\d*$/', $hookName)) {
             $templateFile = 'display-header-buttons.tpl';
-        } elseif (preg_match('/^displayProductAdditionalInfo\d*$/', $hookName) || preg_match('/^displayAfterProductAddCartBtn\d*$/', $hookName) ) {
+        } elseif (preg_match('/^displayHeaderButtonsMobile\d*$/', $hookName)) {
+            $templateFile = 'display-header-buttons-mobile.tpl';
+        }  elseif (preg_match('/^displayProductAdditionalInfo\d*$/', $hookName) || preg_match('/^displayAfterProductAddCartBtn\d*$/', $hookName) ) {
             $templateFile = 'product-page.tpl';
         } elseif (preg_match('/^displayProductListFunctionalButtons\d*$/', $hookName)) {
             $templateFile = 'product-miniature.tpl';

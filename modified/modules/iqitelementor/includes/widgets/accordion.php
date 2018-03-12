@@ -80,6 +80,19 @@ class Widget_Accordion extends Widget_Base {
 		);
 
 		$this->add_control(
+			'active_first',
+			[
+				'label' => \IqitElementorWpHelper::__( 'Active first tab', 'elementor' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 1,
+				'options' => [
+					1 => \IqitElementorWpHelper::__( 'Yes', 'elementor' ),
+					0 => \IqitElementorWpHelper::__( 'No', 'elementor' ),
+				],
+			]
+		);
+
+		$this->add_control(
 			'icon_align',
 			[
 				'label' => \IqitElementorWpHelper::__( 'Icon Alignment', 'elementor' ),
@@ -239,7 +252,7 @@ class Widget_Accordion extends Widget_Base {
 
 	protected function render( $instance = [] ) {
 		?>
-		<div class="elementor-accordion">
+		<div class="elementor-accordion" data-active-first="<?php echo $instance['active_first']; ?>">
 			<?php $counter = 1; ?>
 			<?php foreach ( $instance['tabs'] as $item ) : ?>
 				<div class="elementor-accordion-item">
@@ -260,7 +273,7 @@ class Widget_Accordion extends Widget_Base {
 
 	protected function content_template() {
 		?>
-		<div class="elementor-accordion" data-active-section="{{ editSettings.activeItemIndex ? editSettings.activeItemIndex : 0 }}">
+		<div class="elementor-accordion" data-active-first="{{settings.active_first}}" data-active-section="{{ editSettings.activeItemIndex ? editSettings.activeItemIndex : 0 }}">
 			<#
 			if ( settings.tabs ) {
 				var counter = 1;

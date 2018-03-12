@@ -35,9 +35,9 @@
         {/block}
 
         {block name='product_name'}
-            <h1 class="h3 product-title" itemprop="name">
+            <h3 class="h3 product-title" itemprop="name">
                 <a href="{$product.url}">{$product.name|truncate:50:'...'}</a>
-            </h1>
+            </h3>
         {/block}
 
         {block name='product_brand'}
@@ -100,7 +100,7 @@
                 <div class="product-functional-buttons-links">
                     {hook h='displayProductListFunctionalButtons' product=$product}
                     {block name='quick_view'}
-                        <a class="quick-view" href="#" data-link-action="quickview" data-toggle="tooltip"
+                        <a class="js-quick-view-iqit" href="#" data-link-action="quickview" data-toggle="tooltip"
                            title="{l s='Quick view' d='Shop.Theme.Actions'}">
                             <i class="fa fa-eye" aria-hidden="true"></i></a>
                     {/block}

@@ -206,6 +206,7 @@ class IqitElementorWidget_ProductsListTabs
                             'grid' => IqitElementorWpHelper::__('Grid - big images', 'elementor'),
                             'carousel_s' => IqitElementorWpHelper::__('Carousel - small images', 'elementor'),
                             'grid_s' => IqitElementorWpHelper::__('Grid - small images', 'elementor'),
+                            'list' => IqitElementorWpHelper::__('List', 'elementor')
                         ],
                     ],
                     [
@@ -215,6 +216,9 @@ class IqitElementorWidget_ProductsListTabs
                         'default' => '6',
                         'label_block' => true,
                         'options' => $slidesToShow,
+                        'condition' => [
+                            'view' => ['carousel', 'grid', 'carousel_s', 'grid_s'],
+                        ],
                     ],
                     [
                         'name' => 'slides_to_show_tablet',
@@ -223,6 +227,9 @@ class IqitElementorWidget_ProductsListTabs
                         'default' => '6',
                         'label_block' => true,
                         'options' => $slidesToShow,
+                        'condition' => [
+                            'view' => ['carousel', 'grid', 'carousel_s', 'grid_s'],
+                        ],
                     ],
                     [
                         'name' => 'slides_to_show_mobile',
@@ -231,6 +238,9 @@ class IqitElementorWidget_ProductsListTabs
                         'default' => '6',
                         'label_block' => true,
                         'options' => $slidesToShow,
+                        'condition' => [
+                            'view' => ['carousel', 'grid', 'carousel_s', 'grid_s'],
+                        ],
                     ],
                     [   'name' => 'items_per_column',
                         'label' => IqitElementorWpHelper::__('Items per column', 'elementor'),
@@ -550,7 +560,7 @@ class IqitElementorWidget_ProductsListTabs
                     'mobile' => $tab['slides_to_show_mobile'],
                 ];
 
-            } else{
+            } else if ($tab['view'] == 'carousel' || $tab['view'] == 'carousel_s'){
 
                 $parsedTab['arrows_position'] = $optionsSource['arrows_position'];
 

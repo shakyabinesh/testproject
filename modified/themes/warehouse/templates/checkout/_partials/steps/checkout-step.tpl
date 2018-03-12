@@ -35,7 +35,7 @@
     <h1 class="step-title h3">
       <span class="step-number">{$position}</span>
       {$title}
-      <i class="fa fa-check done" aria-hidden="true"></i>
+      <i class="fa fa-check rtl-no-flip done" aria-hidden="true"></i>
       <span class="step-edit text-muted"><i class="fa fa-pencil" aria-hidden="true"></i> {l s='edit' d='Shop.Theme.Actions'}</span>
     </h1>
 

@@ -25,7 +25,28 @@
 {extends file='catalog/listing/product-list.tpl'}
 
 {block name='product_list_header'}
-  <h1 class="h1 page-title"><span>{l s='List of products by brand %s' sprintf=[$manufacturer.name] d='Shop.Theme.Catalog'}</span></h1>
-  <div id="manufacturer-short_description">{$manufacturer.short_description nofilter}</div>
-  <div id="manufacturer-description">{$manufacturer.description nofilter}</div>
+    <h1 class="h1 page-title">
+        <span>{l s='List of products by brand %s' sprintf=[$manufacturer.name] d='Shop.Theme.Catalog'}</span></h1>
+    <div id="manufacturer-description-wrapper" class="mb-3" role="tablist">
+        <div class="card">
+            <div id="manufacturer-short-description" class="collapse show" role="tabpanel">
+                {$manufacturer.short_description nofilter}
+
+                <a class="btn btn-secondary float-right"  data-toggle="collapse" data-parent="#manufacturer-description-wrapper"
+                   href="#manufacturer-description">
+                    {l s='More' d='Shop.Warehousetheme'}
+                </a>
+
+            </div>
+        </div>
+        <div class="card">
+            <div id="manufacturer-description" class="collapse" role="tabpanel">
+                {$manufacturer.description nofilter}
+                <a class="btn btn-secondary float-right"  data-toggle="collapse" data-parent="#manufacturer-description-wrapper"
+                   href="#manufacturer-short-description">
+                    {l s='Less' d='Shop.Warehousetheme'}
+                </a>
+            </div>
+        </div>
+    </div>
 {/block}

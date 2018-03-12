@@ -33,16 +33,16 @@ function iqitSizeChartCreateTable() {
     //checking which style is selected
 
     if ($('.table_bordered').prop('checked')) {
-        tbl.setAttribute("class", "table table-bordered table-sizegudie");
+        tbl.setAttribute("class", "table table-bordered table-sizegudie table-responsive");
     }
     if ($('.table_bordered').prop('checked') && $('.table_striped').prop('checked')) {
-        tbl.setAttribute("class", "table table-striped table-bordered table-sizegudie");
+        tbl.setAttribute("class", "table table-striped table-bordered table-sizegudie table-responsive");
     }
     if ($('.table_striped').prop('checked') && !$('.table_bordered').prop('checked')) {
-        tbl.setAttribute("class", "table table-striped table-sizegudie");
+        tbl.setAttribute("class", "table table-striped table-sizegudie table-responsive");
     }
     if (!$('.table_bordered').prop('checked') && !$('.table_striped').prop('checked')) {
-        tbl.setAttribute("class", "table table-sizegudie");
+        tbl.setAttribute("class", "table table-sizegudie table-responsive");
     }
 
 

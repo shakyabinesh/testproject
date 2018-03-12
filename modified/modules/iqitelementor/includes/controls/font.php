@@ -22,17 +22,12 @@ class Control_Font extends Control_Base {
 			<div class="elementor-control-input-wrapper">
 				<select class="elementor-control-font-family" data-setting="{{ data.name }}">
 					<option value=""><?php \IqitElementorWpHelper::_e( 'Default', 'elementor' ); ?></option>
+					<option value="custom"><?php \IqitElementorWpHelper::_e( 'Custom', 'elementor' ); ?></option>
 					<optgroup label="<?php \IqitElementorWpHelper::_e( 'System', 'elementor' ); ?>">
 						<# _.each( getFontsByGroups( 'system' ), function( fontType, fontName ) { #>
 						<option value="{{ fontName }}">{{{ fontName }}}</option>
 						<# } ); #>
 					</optgroup>
-					<?php /*
-					<optgroup label="<?php \IqitElementorWpHelper::_e( 'Local', 'elementor' ); ?>">
-						<# _.each( getFontsByGroups( 'local' ), function( fontType, fontName ) { #>
-						<option value="{{ fontName }}">{{{ fontName }}}</option>
-						<# } ); #>
-					</optgroup> */ ?>
 					<optgroup label="<?php \IqitElementorWpHelper::_e( 'Google', 'elementor' ); ?>">
 						<# _.each( getFontsByGroups( [ 'googlefonts', 'earlyaccess' ] ), function( fontType, fontName ) { #>
 						<option value="{{ fontName }}">{{{ fontName }}}</option>

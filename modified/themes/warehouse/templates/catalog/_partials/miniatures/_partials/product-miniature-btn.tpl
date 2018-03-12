@@ -22,7 +22,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
+
 <div class="product-add-cart">
+    
     {if $product.add_to_cart_url && ($product.quantity > 0 || $product.allow_oosp) && !$configuration.is_catalog}
         <form action="{$product.add_to_cart_url}" method="post">
 
@@ -31,9 +33,9 @@
                 <input
                         type="number"
                         name="qty"
-                        value="{$product.minimal_quantity}"
+                        value="{if isset($product.product_attribute_minimal_quantity)}{$product.product_attribute_minimal_quantity}{else}{$product.minimal_quantity}{/if}"
                         class="input-group form-control input-qty"
-                        min="{$product.minimal_quantity}"
+                        min="{if isset($product.product_attribute_minimal_quantity)}{$product.product_attribute_minimal_quantity}{else}{$product.minimal_quantity}{/if}"
                 >
 
                 <button

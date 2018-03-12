@@ -59,6 +59,7 @@
                     <a href="{$urls.pages.my_account}" class="m-nav-btn"><i class="fa fa-user" aria-hidden="true"></i>
                         <span>{l s='Sign in' d='Shop.Theme.Actions'}</span></a>
                 </div>
+                {hook h='displayHeaderButtonsMobile'}
                 {if !$configuration.is_catalog}
                 <div class="col col-auto col-mobile-btn col-mobile-btn-cart ps-shoppingcart {if isset($iqitTheme.cart_style) && $iqitTheme.cart_style == "floating"}dropdown{else}side-cart{/if}">
                     <div id="mobile-cart-wrapper">

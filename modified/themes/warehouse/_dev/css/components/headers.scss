@@ -151,6 +151,10 @@
       display: block;
       width: 100%;
     }
+    .row-mobile-buttons > .col-auto{
+      flex-basis: 0;
+      flex-grow: 1;
+    }
   }
 }
 

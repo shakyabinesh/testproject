@@ -30,7 +30,7 @@
 {/block}
 
 {block name='head_seo_title'}
-	{if isset($post->meta_description) && $post->meta_description != ''}
+	{if isset($post->meta_title) && $post->meta_title != ''}
 		{$post->meta_title} - {$page.meta.title}
 	{else}
 		{$post->title} - {$page.meta.title}
@@ -44,6 +44,24 @@
 {if isset($post->meta_keywords) && $post->meta_keywords != ''}
 	{block name='head_seo_keywords'}{$post->meta_keywords}{/block}
 {/if}
+
+{block name='head_og_tags'}
+	{if isset($post->meta_title) && $post->meta_title != ''}
+		<meta property="og:title" content="{$post->meta_title}">
+	{else}
+		<meta property="og:title" content="{$post->title} - {$page.meta.description}">
+	{/if}
+	<meta property="og:url" content="http://{$smarty.server.HTTP_HOST}{$smarty.server.REQUEST_URI}"/>
+	<meta property="og:site_name" content="{$shop.name}"/>
+	<meta property="og:type" content="website">
+	<meta property="og:image" content="{$shop.logo}" />
+
+	{if isset($post->meta_description) && $post->meta_description != ''}
+		<meta property="og:description" content="{$post->meta_description}">
+	{else}
+		<meta property="og:description" content="{$page.meta.description}">
+	{/if}
+{/block}
 
 {block name='page_content_container'}
 {assign var='post_type' value=$post->post_type}

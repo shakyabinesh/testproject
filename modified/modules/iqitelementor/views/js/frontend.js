@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(require,module,exports){
 var ElementsHandler;
 
 ElementsHandler = function( $ ) {
@@ -187,14 +187,19 @@ var activateSection = function( sectionIndex, $accordionTitles ) {
 
 module.exports = function( $ ) {
 	var $this = $( this ),
-		defaultActiveSection = $this.find( '.elementor-accordion' ).data( 'active-section' ),
+		$accordionDiv = $this.find( '.elementor-accordion' ),
+		defaultActiveSection = $accordionDiv.data( 'active-section' ),
+		activeFirst =  $accordionDiv.data( 'active-first' ),
 		$accordionTitles = $this.find( '.elementor-accordion-title' );
 
 	if ( ! defaultActiveSection ) {
 		defaultActiveSection = 1;
 	}
 
-	activateSection( defaultActiveSection, $accordionTitles );
+	if(activeFirst){
+		activateSection( defaultActiveSection, $accordionTitles );
+	}
+
 
 	$accordionTitles.on( 'click', function() {
 		activateSection( this.dataset.section, $accordionTitles );
@@ -471,8 +476,65 @@ module.exports = function ($) {
 };
 
 },{}],12:[function(require,module,exports){
-arguments[4][11][0].apply(exports,arguments)
-},{"dup":11}],13:[function(require,module,exports){
+module.exports = function ($) {
+    var $carousel = $(this).find('.elementor-products-carousel');
+    if (!$carousel.length) {
+        if (elementorFrontendConfig.isEditMode) {
+            $(this).find('img[data-original]').each(function() {
+                $(this).attr('src', $(this).data('original'));
+            });
+        }
+        return;
+    }
+
+    var respondTo = 'window';
+
+    if (elementorFrontendConfig.isEditMode) {
+        respondTo = 'iframe-window';
+    }
+
+    var savedOptions = $carousel.data('slider_options'),
+        defaultOptions = {
+            respondTo: respondTo,
+            infinite: false,
+            autoplaySpeed: 4500,
+            rows: savedOptions.itemsPerColumn,
+            responsive: [
+                {
+                    breakpoint: 992,
+                    settings: {
+                        slidesToShow: savedOptions.slidesToShowTablet,
+                        slidesToScroll: savedOptions.slidesToShowTablet
+                    }
+                },
+                {
+                    breakpoint: 576,
+                    settings: {
+                        slidesToShow: savedOptions.slidesToShowMobile,
+                        slidesToScroll: savedOptions.slidesToShowMobile
+                    }
+                }
+            ]
+        },
+
+        slickOptions = $.extend({}, defaultOptions, $carousel.data('slider_options'));
+
+    $carousel.slick(slickOptions);
+
+    if (elementorFrontendConfig.isEditMode) {
+        $(window).on('changedDeviceMode', function () {
+            $carousel.slick('getSlick').checkResponsive();
+        });
+    }
+
+    $(document).on('shown.bs.tab', $(this).find('a[data-toggle="tab"]'), function (e) {
+        prestashop.iqitLazyLoad.update();
+    })
+
+
+};
+
+},{}],13:[function(require,module,exports){
 module.exports = function( $ ) {
 	var $progressbar = $( this ).find( '.elementor-progress-bar' );
 

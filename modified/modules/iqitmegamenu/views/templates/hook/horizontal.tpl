@@ -30,7 +30,7 @@
 
 								<span class="cbp-tab-title">{if $tab.icon_type && !empty($tab.icon_class)} <i class="icon fa {$tab.icon_class} cbp-mainlink-icon"></i>{/if}
 
-								{if !$tab.icon_type && !empty($tab.icon)} <img src="{$tab.icon}" alt="{$tab.title}" class="cbp-mainlink-iicon" />{/if}{if !$tab.active_label}{$tab.title|replace:'/n':'<br />'}{/if}{if $tab.submenu_type} <i class="fa fa-angle-down cbp-submenu-aindicator"></i>{/if}</span>
+								{if !$tab.icon_type && !empty($tab.icon)} <img src="{$tab.icon}" alt="{$tab.title}" class="cbp-mainlink-iicon" />{/if}{if !$tab.active_label}{$tab.title|replace:'/n':'<br />' nofilter}{/if}{if $tab.submenu_type} <i class="fa fa-angle-down cbp-submenu-aindicator"></i>{/if}</span>
 								{if !empty($tab.label)}<span class="label cbp-legend cbp-legend-main">{if !empty($tab.legend_icon)} <i class="icon fa {$tab.legend_icon} cbp-legend-icon"></i>{/if} {$tab.label}
 								</span>{/if}
 						</a>
