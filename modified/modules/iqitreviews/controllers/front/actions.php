@@ -49,26 +49,26 @@ class IqitReviewsActionsModuleFrontController extends ModuleFrontController
         }
 
         if (!Validate::isInt($idProduct)) {
-            $errors[] = $this->l('Wrong product id');
+            $errors[] = $this->module->l('Wrong product id');
         }
         if (!Tools::getValue('iqitreviews_title') || !Validate::isGenericName(Tools::getValue('iqitreviews_title'))) {
-            $errors[] = $this->l('Title is incorrect');
+            $errors[] = $this->trans('Title is incorrect');
         }
         if (!Tools::getValue('iqitreviews_comment') || !Validate::isMessage(Tools::getValue('iqitreviews_comment'))) {
             $errors[] = $this->l('Comment is incorrect');
         }
         if (!$idCustomer && (!Tools::isSubmit('iqitreviews_customer_name') || !Tools::getValue('iqitreviews_customer_name') || !Validate::isGenericName(Tools::getValue('iqitreviews_customer_name')))) {
-            $errors[] = $this->l('Customer name is incorrect');
+            $errors[] = $this->module->l('Customer name is incorrect');
         }
         if (!$this->context->customer->id && !Configuration::get($this->module->cfgName . 'guest')) {
-            $errors[] = $this->l('You must be logged to rate product');
+            $errors[] = $this->module->l('You must be logged to rate product');
         }
         if (!Validate::isInt(Tools::getValue('iqitreviews_rating'))) {
-            $errors[] = $this->l('Wrong rating');
+            $errors[] = $this->module->l('Wrong rating');
         }
 
         if (!$product->id) {
-            $errors[] = $this->l('Product not found');
+            $errors[] = $this->module->l('Product not found');
         }
 
         if (!count($errors)) {
@@ -97,14 +97,14 @@ class IqitReviewsActionsModuleFrontController extends ModuleFrontController
                 $review->save();
 
                 $result = true;
-                $message = $this->l('Review added');
+                $message = $this->module->l('Review added');
             } else {
                 $result = false;
-                $errors[] = $this->l('Please wait 60 seconds before posting another comment');
+                $errors[] = $this->module->l('Please wait 60 seconds before posting another comment');
             }
         } else {
             $result = false;
-            $message = $this->l('There was error(s) during adding a review');
+            $message = $this->module->l('There was error(s) during adding a review');
         }
 
         $this->module->clearCache($idProduct);

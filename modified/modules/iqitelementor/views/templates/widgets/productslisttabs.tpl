@@ -41,7 +41,7 @@
                 {if $tab.view == 'carousel_s' || $tab.view == 'carousel'}
                     <div class="products elementor-products-carousel slick-products-carousel products-grid slick-arrows-{$tab.arrows_position}"  data-slider_options='{$tab.options|@json_encode nofilter}'>
                 {else}
-                    <div class="products row products-grid">
+                    <div class="products row {if $tab.view == 'list'}products-list{else}products-grid {/if}">
                 {/if}
                         {foreach from=$tab.products item="product"}
                             {if $tab.view == 'grid_s'}
@@ -50,6 +50,8 @@
                                 {include file="catalog/_partials/miniatures/product-small.tpl" product=$product elementor=true carousel=true }
                             {elseif $tab.view == 'grid'}
                                 {include file="catalog/_partials/miniatures/product.tpl" product=$product elementor=true nbMobile=$tab.slidesToShow.mobile nbTablet=$tab.slidesToShow.tablet nbDesktop=$tab.slidesToShow.desktop}
+                            {elseif $tab.view == 'list'}
+                                {include file="catalog/_partials/miniatures/product-list.tpl" product=$product elementor=true}
                             {else}
                                 {include file="catalog/_partials/miniatures/product.tpl" product=$product elementor=true carousel=true}
                             {/if}

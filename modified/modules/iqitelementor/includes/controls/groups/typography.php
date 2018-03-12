@@ -55,6 +55,15 @@ class Group_Control_Typography extends Group_Control_Base {
 			'selector_value' => 'font-family: {{VALUE}}' . $default_fonts . ';',
 		];
 
+        $fields['font_family_custom'] = [
+            'label' => \IqitElementorWpHelper::_x( 'Custom font family', 'Typography Control', 'elementor' ),
+            'type' => Controls_Manager::TEXT,
+            'default' => '',
+            'selector_value' => 'font-family: {{VALUE}}' . $default_fonts . ';',
+        ];
+
+
+
 		$typo_weight_options = [ '' => \IqitElementorWpHelper::__( 'Default', 'elementor' ) ];
 		foreach ( array_merge( [ 'normal', 'bold' ], range( 100, 900, 100 ) ) as $weight ) {
 			$typo_weight_options[ $weight ] = ucfirst( $weight );
@@ -139,6 +148,12 @@ class Group_Control_Typography extends Group_Control_Base {
 			];
 		} );
 
+
+        $controls['font_family_custom']['condition'] = [
+            'typography' => [ 'custom' ],
+            'font_family' => [ 'custom' ],
+        ];
+
 		$typography_control = [
 			'typography' => [
 				'label' => \IqitElementorWpHelper::_x( 'Typography', 'Typography Control', 'elementor' ),
@@ -151,18 +166,7 @@ class Group_Control_Typography extends Group_Control_Base {
 			],
 		];
 
-		/*
-		 *  Custom Typography switch control version
-		 *
-		$typography_control = [
-			'typography' => [
-				'label' => \IqitElementorWpHelper::_x( 'Custom Typography', 'Typography Control', 'elementor' ),
-				'type' => Controls_Manager::SWITCHER,
-				'default' => '',
-				'return_value' => 'custom',
-			],
-		];
-		*/
+
 
 		$controls = $typography_control + $controls;
 

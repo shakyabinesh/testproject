@@ -24,7 +24,7 @@
 *}
 
 <script type="text/javascript">
-    var onlyElementor = {$onlyElementor};
+
     var elementorPageType = '{$pageType}';
 </script>
 

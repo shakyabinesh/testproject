@@ -229,6 +229,24 @@ class Widget_Video extends Widget_Base {
             ]
         );
 
+
+        $this->add_control(
+            'yt_loop',
+            [
+                'label' => \IqitElementorWpHelper::__( 'Loop', 'elementor' ),
+                'type' => Controls_Manager::SELECT,
+                'section' => 'section_video',
+                'options' => [
+                    'no' => \IqitElementorWpHelper::__( 'No', 'elementor' ),
+                    'yes' => \IqitElementorWpHelper::__( 'Yes', 'elementor' ),
+                ],
+                'condition' => [
+                    'video_type' => 'youtube',
+                ],
+                'default' => 'no',
+            ]
+        );
+
         $this->add_control(
             'yt_rel',
             [
@@ -517,11 +535,17 @@ class Widget_Video extends Widget_Base {
     {
         $params = '';
         if (strpos($url, 'youtube.com') !== FALSE) {
+            $step1 = explode('v=', $url);
+            $step2 = explode('&amp;', $step1[1]);
+
             if (isset($settings['autoplay']) && $settings['autoplay']) {
                 $params .= '?autoplay=1';
             }
             else {
                 $params .= '?autoplay=0';
+            }
+            if ($settings['loop']) {
+                $params .= '&loop=1 &playlist='.$step2[0];
             }
             if (!$settings['rel']) {
                 $params .= '&rel=0';
@@ -532,8 +556,7 @@ class Widget_Video extends Widget_Base {
             if (!$settings['showinfo']) {
                 $params .= '&showinfo=0';
             }
-            $step1 = explode('v=', $url);
-            $step2 = explode('&amp;', $step1[1]);
+
             $iframe = '<iframe width="' . $wdth . '" height="' . $hth . '" src="https://www.youtube.com/embed/' . $step2[0] . $params . '" frameborder="0" allowfullscreen></iframe>';
 
         } else if (strpos($url, 'vimeo') !== FALSE) {
@@ -570,7 +593,7 @@ class Widget_Video extends Widget_Base {
         $params = [];
 
         if ( 'youtube' === $this->_current_instance['video_type'] ) {
-            $youtube_options = [ 'autoplay', 'rel', 'controls', 'showinfo' ];
+            $youtube_options = [ 'autoplay', 'loop', 'rel', 'controls', 'showinfo' ];
 
             foreach ( $youtube_options as $option ) {
                 if ( 'autoplay' === $option && $this->allow_autoplay() )

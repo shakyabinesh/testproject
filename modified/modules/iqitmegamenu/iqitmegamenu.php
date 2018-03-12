@@ -367,10 +367,19 @@ class IqitMegaMenu extends Module implements WidgetInterface
                 $str = Tools::file_get_contents($_FILES['uploadTabs']['tmp_name']);
                 $arr = unserialize($str);
 
+                $default_language = Configuration::get('PS_LANG_DEFAULT');
+
                 foreach ($arr as $id_tab => $tab) {
                     if (Validate::isLoadedObject($tab)) {
                         $tab->id_shop = (int)Context::getContext()->shop->id;
                         $tab->id_shop_list = (int)Context::getContext()->shop->id;
+
+
+                        if (!isset($tab->title[$default_language])){
+                            $tab->title[$default_language] = 'Tab name ' . $tab->id;
+
+                        }
+
                         $tab->add();
                     }
                 }
@@ -3134,22 +3143,27 @@ class IqitMegaMenu extends Module implements WidgetInterface
                     foreach ($tab['submenu_content'] as $tab_id) {
                         $innertab = new IqitMenuTab($tab_id, $id_lang, $id_shop);
 
-                        if (!$innertab->verifyAccess()) {
-                            unset($tab['submenu_content'][$tab_id]);
-                            continue;
+                        if (Validate::isLoadedObject($innertab)) {
+
+                            if (!$innertab->verifyAccess()) {
+                                unset($tab['submenu_content'][$tab_id]);
+                                continue;
+                            }
+
+                            if (Tools::strlen(($innertab->submenu_content))) {
+                                $innertab->submenu_content = $this->buildSubmenuTree(Tools::jsonDecode($innertab->submenu_content,
+                                    true), true);
+                            }
+
+                            if (!$innertab->url_type) {
+                                $trans = $this->transformToLink($innertab->id_url, true, $id_lang, $id_shop);
+                                $innertab->url = $trans['href'];
+                            }
+
+                            $tabs[$key]['submenu_content_tabs'][$tab_id] = $innertab;
+
                         }
 
-                        if (Tools::strlen(($innertab->submenu_content))) {
-                            $innertab->submenu_content = $this->buildSubmenuTree(Tools::jsonDecode($innertab->submenu_content,
-                                true), true);
-                        }
-
-                        if (!$innertab->url_type) {
-                            $trans = $this->transformToLink($innertab->id_url, true, $id_lang, $id_shop);
-                            $innertab->url = $trans['href'];
-                        }
-
-                        $tabs[$key]['submenu_content_tabs'][$tab_id] = $innertab;
                     }
                 }
             }

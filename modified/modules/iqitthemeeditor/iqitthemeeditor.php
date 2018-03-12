@@ -29,13 +29,14 @@ class IqitThemeEditor extends Module
     {
         $this->name = 'iqitthemeeditor';
         $this->tab = 'front_office_features';
-        $this->version = '4.1.5';
+        $this->version = '4.1.6';
         $this->author = 'IQIT-COMMERCE.COM';
         $this->bootstrap = true;
         $this->cfgName = 'iqitthemeed_';
         $this->controllers = array('preview');
 
         parent::__construct();
+
 
         $this->defaults = array(
             //general
@@ -54,6 +55,8 @@ class IqitThemeEditor extends Module
 
             //responsive-mobile
             'rm_logo' => array('type' => 'default', 'value' => '', 'cached' => true, 'scssType' => 'ignore'),
+            'rm_icon_apple' => array('type' => 'default', 'value' => '', 'cached' => true, 'scssType' => 'ignore'),
+            'rm_icon_android' => array('type' => 'default', 'value' => '', 'cached' => true, 'scssType' => 'ignore'),
             'rm_padding' => array('type' => 'default', 'value' => ''),
             'rm_breakpoint' => array('type' => 'default', 'value' => '', 'cached' => true),
             'rm_pinch_zoom' => array('type' => 'default', 'value' => '', 'cached' => true, 'scssType' => 'ignore'),
@@ -505,7 +508,12 @@ class IqitThemeEditor extends Module
             'pp_accesories' => array('type' => 'default', 'value' => '', 'cached' => true, 'scssType' => 'ignore'),
             'pp_tabs' => array('type' => 'default', 'value' => '', 'cached' => true, 'scssType' => 'ignore'),
             'pp_tabs_position' => array('type' => 'default', 'value' => ''),
+            'pp_reference' => array('type' => 'default', 'value' => 'tab', 'cached' => true, 'scssType' => 'ignore'),
             'pp_man_logo' => array('type' => 'default', 'value' => 'tab', 'cached' => true, 'scssType' => 'ignore'),
+            'pp_man_desc' => array('type' => 'default', 'value' => 'tab', 'cached' => true, 'scssType' => 'ignore'),
+            'pp_preloader' => array('type' => 'default', 'value' => 'tab'),
+
+
 
             //brands-page
             'brands_layout' => array('type' => 'default', 'value' => '', 'cached' => true, 'scssType' => 'ignore'),
@@ -987,6 +995,7 @@ class IqitThemeEditor extends Module
         if ($options['g_layout'] != 'boxed'){
             $f_fixed = $options['f_fixed'];
         }
+
 
         Media::addJsDef(array(
             'iqitTheme' => [

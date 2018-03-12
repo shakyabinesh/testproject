@@ -30,7 +30,6 @@ if (!defined('_PS_VERSION_')) {
 use PrestaShop\PrestaShop\Adapter\BestSales\BestSalesProductSearchProvider;
 use PrestaShop\PrestaShop\Adapter\NewProducts\NewProductsProductSearchProvider;
 use PrestaShop\PrestaShop\Adapter\PricesDrop\PricesDropProductSearchProvider;
-use PrestaShop\PrestaShop\Adapter\PricesOnsale\PricesOnsaleProductSearchProvider;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerProductSearchProvider;
 use PrestaShop\PrestaShop\Adapter\Category\CategoryProductSearchProvider;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
@@ -105,7 +104,6 @@ class IqitElementorWidget_ProductsList
         $productSourceOptions['bb'] = IqitElementorWpHelper::__('By brand', 'elementor');
         $productSourceOptions['np'] = IqitElementorWpHelper::__('New products', 'elementor');
         $productSourceOptions['pd'] = IqitElementorWpHelper::__('Price drops', 'elementor');
-        $productSourceOptions['os'] = IqitElementorWpHelper::__('On Sale', 'elementor');
         $productSourceOptions['bs'] = IqitElementorWpHelper::__('Best sellers', 'elementor');
         $productSourceOptions = array_merge($productSourceOptions, $categories);
 
@@ -195,6 +193,7 @@ class IqitElementorWidget_ProductsList
                     'grid' => IqitElementorWpHelper::__('Grid - big images', 'elementor'),
                     'carousel_s' => IqitElementorWpHelper::__('Carousel - small images', 'elementor'),
                     'grid_s' => IqitElementorWpHelper::__('Grid - small images', 'elementor'),
+                    'list' => IqitElementorWpHelper::__('List', 'elementor')
                 ],
             ],
             'slides_to_show' => [
@@ -205,6 +204,9 @@ class IqitElementorWidget_ProductsList
                 'label_block' => true,
                 'section' => 'section_pswidget_options',
                 'options' => $slidesToShow,
+                'condition' => [
+                    'view' => ['carousel', 'grid', 'carousel_s', 'grid_s'],
+                ],
             ],
             'items_per_column' => [
                 'label' => IqitElementorWpHelper::__('Items per column', 'elementor'),
@@ -483,7 +485,8 @@ class IqitElementorWidget_ProductsList
                 'mobile' => $optionsSource['slides_to_show_mobile'],
             ];
 
-        } else{
+        } else if ($optionsSource['view'] == 'carousel' || $optionsSource['view'] == 'carousel_s'){
+
             $return['arrows_position'] = $optionsSource['arrows_position'];
 
             $show_dots = ( in_array( $optionsSource['navigation'], [ 'dots', 'both' ] ) );
@@ -607,18 +610,6 @@ class IqitElementorWidget_ProductsList
                     $this->context->getTranslator()
                 );
                 $query->setQueryType('prices-drop');
-                if ($orderBy == 'random') {
-                    $orderBy = 'position';
-                } else {
-                    $query->setSortOrder(new SortOrder('product', $orderBy, $orderWay));
-                }
-                break;
-                
-            case 'os':
-                $searchProvider = new PricesOnsaleProductSearchProvider(
-                $this->context->getTranslator()
-                );
-                $query->setQueryType('prices-onsale');
                 if ($orderBy == 'random') {
                     $orderBy = 'position';
                 } else {

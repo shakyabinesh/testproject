@@ -38,7 +38,7 @@
     {hook h='displayAfterBodyOpeningTag'}
 {/block}
 
-<main>
+<main id="main-page-content" {if $iqitTheme.op_preloader == "pre" && isset($iqitTheme.op_preloader_icon_pre)}style="opacity: 0;"{/if} >
     {block name='product_activation'}
         {include file='catalog/_partials/product-activation.tpl'}
     {/block}
@@ -115,7 +115,7 @@
 </button>
 
 {if $iqitTheme.op_preloader == "pre" && isset($iqitTheme.op_preloader_icon_pre)}
-    <div id="page-preloader">
+    <div id="page-preloader" style="">
         <div class="loader-wrapper">
             <div class="loader loader-{$iqitTheme.op_preloader_icon_pre}"></div>
         </div>

@@ -184,6 +184,17 @@
     }
   }
 }
+.iqit-accordion{
+  .nav-link{
+    border-bottom: $c_tabs_border_b;
+    border-bottom-color: transparent;
+
+  }
+  .nav-link:not(.collapsed) {
+    @include st2(color, $c_tabs_txt);
+    border-bottom: $c_tabs_border_b;
+  }
+}
 
 //sidebar and facets
 

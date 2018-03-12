@@ -6,7 +6,10 @@ prestashop.cart = prestashop.cart || {};
 
 prestashop.cart.active_inputs = null;
 
-var spinnerSelector = 'input[name="product-quantity-spin"]';
+let spinnerSelector = 'input[name="product-quantity-spin"]';
+let hasError = false;
+let isUpdateOperation = false;
+let errorMsg = '';
 
 /**
  * Attach Bootstrap TouchSpin event handlers
@@ -24,6 +27,8 @@ function createSpin()
       max: 1000000
     });
   });
+
+  CheckUpdateQuantityOperations.switchErrorStat();
 }
 
 
@@ -148,6 +153,7 @@ $(document).ready(() => {
         promises.push(jqXHR);
       }
     }).then(function (resp) {
+      CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
       var $quantityInput = getTouchSpinInput($target);
       $quantityInput.val(resp.quantity);
 
@@ -186,7 +192,9 @@ $(document).ready(() => {
         promises.push(jqXHR);
       }
     }).then(function (resp) {
+      CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
       $target.val(resp.quantity);
+
       var dataset;
       if ($target) {
         dataset = event.currentTarget.dataset;
@@ -263,5 +271,39 @@ $(document).ready(() => {
     }
   )
 });
+
+
+const CheckUpdateQuantityOperations = {
+  'switchErrorStat': () => {
+    let $checkoutBtn = $('.checkout a');
+
+    if ($("#notifications article.alert-danger").length
+        || hasError
+    ) {
+      $checkoutBtn.addClass('disabled');
+    }
+
+    if (hasError && '' !== errorMsg) {
+      let strError = ' <article class="alert alert-danger" role="alert" data-alert="danger"><ul><li>' + errorMsg + '</li></ul></article>';
+      $('#notifications .container').html(strError);
+      errorMsg = '';
+      isUpdateOperation = false;
+    } else if (!hasError && isUpdateOperation) {
+      hasError = false;
+      isUpdateOperation = false;
+      $('#notifications .container').html('');
+      $checkoutBtn.removeClass('disabled');
+    }
+  },
+  'checkUpdateOpertation': (resp) => {
+    hasError = resp.hasOwnProperty('hasError');
+    isUpdateOperation = true;
+    if (!hasError) {
+      hasError = ('' !== resp.errors);
+      errorMsg = resp.errors;
+    }
+  }
+};
+
 
 

@@ -176,9 +176,15 @@ class ph_relatedposts extends Module implements WidgetInterface
                 return $array;
             }
             return  $array;
-        }
+        } else{
 
-        return false;
+            $templateFile = 'related-posts-section.tpl';
+            $assign = $this->getWidgetVariables($hookName, $configuration);
+
+            $this->smarty->assign($assign);
+            return $this->fetch('module:' . $this->name . '/views/templates/hook/' .$templateFile);
+
+        }
     }
 
     public function getWidgetVariables($hookName = null, array $configuration = [])
@@ -187,8 +193,14 @@ class ph_relatedposts extends Module implements WidgetInterface
             $hookName = $configuration['hook'];
         }
 
-        if (preg_match('/^displayProductExtraContent\d*$/', $hookName)) {
-            $idProduct = (int) $configuration['product']->id;
+        if (preg_match('/^displayProductExtraContent\d*$/', $hookName) || preg_match('/^displayFooterProduct\d*$/', $hookName)) {
+
+
+            if (isset($configuration['product']->id)){
+                $idProduct = (int) $configuration['product']->id;
+            } else{
+                $idProduct = (int) $configuration['product']['id'];
+            }
 
             $cacheId = 'PhRelatedPosts' . $idProduct;
 

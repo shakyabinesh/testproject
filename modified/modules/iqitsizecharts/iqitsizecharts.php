@@ -496,9 +496,8 @@ class IqitSizeCharts extends Module implements WidgetInterface
             $this->smarty->assign($this->getWidgetVariables($hookName, $configuration));
 
             return $this->fetch($this->templatePath . $templateFile);
-        } elseif (preg_match('/^displayProductAdditionalInfo\d*$/',
-                $hookName) || preg_match('/^displayProductVariants\d*$/', $hookName)
-        ) {
+        } elseif (preg_match('/^displayProductAdditionalInfo\d*$/', $hookName) || preg_match('/^displayProductVariants\d*$/', $hookName) || preg_match('/^displayAfterProductAddCartBtn\d*$/', $hookName))
+        {
             $idProduct = (int)$configuration['smarty']->tpl_vars['product']->value['id_product'];
 
             $cacheId = 'iqitsizecharts|' . $idProduct;

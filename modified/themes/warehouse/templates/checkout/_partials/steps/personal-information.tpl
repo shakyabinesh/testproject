@@ -40,9 +40,7 @@
       </a>
     </p>
 
-    <div class="collapse" id="personal-information-step-login">
-      {render file='checkout/_partials/login-form.tpl' ui=$login_form}
-    </div>
+    {render file='checkout/_partials/login-form.tpl' ui=$login_form}
 
     {block name='display_after_login_form'}
       {hook h='displayCheckoutLoginFormAfter'}

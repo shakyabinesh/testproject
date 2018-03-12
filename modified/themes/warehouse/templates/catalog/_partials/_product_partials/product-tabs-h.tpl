@@ -25,7 +25,7 @@
 
 {block name='product_tabs'}
     <div class="tabs product-tabs">
-        <ul class="nav nav-tabs">
+        <ul id="product-infos-tabs" class="nav nav-tabs">
             {if $product.description}
                 <li class="nav-item">
                     <a class="nav-link{if $product.description} active{/if}" data-toggle="tab"
@@ -36,7 +36,7 @@
             {/if}
             <li class="nav-item">
                 <a class="nav-link{if !$product.description} active{/if}" data-toggle="tab"
-                   href="#product-details">
+                   href="#product-details-tab">
                     {l s='Product Details' d='Shop.Theme.Catalog'}
                 </a>
             </li>
@@ -58,6 +58,16 @@
                 {/if}
             {/if}
 
+            {if $iqitTheme.pp_man_desc}
+            {if isset($product_manufacturer) && $product_manufacturer->description != ''}
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#brand-tab">
+                        {l s='About' d='Shop.Warehousetheme'} {$product_manufacturer->name}
+                    </a>
+                </li>
+            {/if}
+            {/if}
+
             {foreach from=$product.extraContent item=extra key=extraKey}
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab"
@@ -66,7 +76,7 @@
             {/foreach}
         </ul>
 
-        <div class="tab-content" id="tab-content">
+        <div id="product-infos-tabs-content"  class="tab-content">
             <div class="tab-pane in{if $product.description} active{/if}" id="description">
                 {block name='product_description'}
                     <div class="product-description">
@@ -77,13 +87,16 @@
             </div>
 
             <div class="tab-pane {if !$product.description} in active{/if}"
-                 id="product-details"
-                 data-product="{$product.embedded_attributes|json_encode}"
+                 id="product-details-tab"
             >
+                <div id="product-details"
+                     data-product="{$product.embedded_attributes|json_encode}"
+                >
+
                 {block name='product_details'}
                     {include file='catalog/_partials/product-details.tpl'}
                 {/block}
-
+                </div>
             </div>
 
             {block name='product_attachments'}
@@ -124,6 +137,17 @@
                 {/if}
             {/if}
 
+            {if $iqitTheme.pp_man_desc}
+            {if isset($product_manufacturer) && $product_manufacturer->description != ''}
+                 <div class="tab-pane in" id="brand-tab">
+                        <div class="rte-content">
+                            {$product_manufacturer->description nofilter}
+                        </div>
+                    </div>
+            {/if}
+            {/if}
+
+
             {foreach from=$product.extraContent item=extra key=extraKey}
             <div class="tab-pane  in {$extra.attr.class}"
                  id="extra-{$extraKey}" {foreach $extra.attr as $key => $val} {$key}="{$val}"{/foreach}
@@ -133,4 +157,6 @@
         {/foreach}
     </div>
     </div>
+
+    <div class="iqit-accordion" id="product-infos-accordion-mobile" role="tablist" aria-multiselectable="true"></div>
 {/block}

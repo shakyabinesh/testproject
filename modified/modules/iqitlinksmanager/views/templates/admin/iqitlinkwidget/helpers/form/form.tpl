@@ -124,6 +124,23 @@
     {/strip}
     {/function}
 
+    {function name="category_tree" nodes=[] depth=0}
+         {strip}
+              {if $nodes|count}
+                  {foreach from=$nodes item=node}
+                      {if $node.level_depth > 1}
+                      <li data-id="{$node.id_category}" data-type="category" style="margin-left:{math equation="17 * depth" depth=$depth}px" class=""><span class="drag-handle">&#9776;</span>{$node.name|escape} <small>({l s='category' mod='iqitlinksmanager'})</small> <i class="icon-trash js-remove "></i></li>
+                      {/if}
+                      {if isset($node.children)}{foreach from=$node.children item=page}
+                          <li data-id="{$page.id_category}" data-type="category" style="margin-left:{math equation="17 * (depth+1)" depth=$depth}px"><span class="drag-handle">&#9776;</span>{$page.name|escape} <small>({l s='category' mod='iqitlinksmanager'})</small> <i class="icon-trash js-remove "></i></li>
+                      {/foreach}
+                       {category_tree nodes=$node.children depth=$depth+1}
+                      {/if}
+                  {/foreach}
+              {/if}
+          {/strip}
+    {/function}
+
     <div class="col-xs-7">
     <div class="panel link-selector">
         <div class="panel-heading">{$input.label}</div>
@@ -137,8 +154,8 @@
               <li data-id="{$page.id_cms}" data-type="static"><span class="drag-handle">&#9776;</span>{$page.title|escape} <small>({l s='static page' mod='iqitlinksmanager'})</small> <i class="icon-trash js-remove "></i></li>
             {/foreach}
           {/foreach}
-
-
+            <li class="list-subtitle">{l s='Categories' mod='iqitlinksmanager'}</li>
+                {category_tree nodes=$category_tree}
         </ul>
     </div>
     </div>
@@ -223,10 +240,10 @@
                     {custom_link_lang page=$page}
                 <i class="icon-trash js-remove "></i></li>
             {else}
-                <li data-type="{$page.type}" data-id="{$page.id}"><span class="drag-handle">&#9776;</span>{$page.data.title}<small>
+                {if isset($page.data.title)}<li data-type="{$page.type}" data-id="{$page.id}"><span class="drag-handle">&#9776;</span>{$page.data.title}<small>
                  {if ($page.type == 'static')}({l s='static pages' mod='iqitlinksmanager'}){/if} {if ($page.type == 'cms_category')}({l s='cms category' mod='iqitlinksmanager'}){/if} {if ($page.type == 'cms_page')}({l s='cms page' mod='iqitlinksmanager'}){/if}
 
-                </small> <i class="icon-trash js-remove "></i></li>
+                </small> <i class="icon-trash js-remove "></i></li>{/if}
             {/if}
         {/foreach}
         </ul>

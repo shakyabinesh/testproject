@@ -16,18 +16,18 @@ if (!defined('_PS_VERSION_')) {
 class AdminRevolutionsliderNavigationController extends ModuleAdminController
 {
 
-    public static $_revSliderJSON;
+  public static $_revSliderJSON;
 
     public function __construct()
     {
+        if(Tools::getValue("view") == ""){
+            Tools::redirectAdmin('index.php?controller=AdminRevolutionsliderNavigation&view=revslider_navigation&token='.Tools::getAdminTokenLite('AdminRevolutionsliderNavigation'));
+        }
         $this->bootstrap = false;
 
         $this->lang = false;
         parent::__construct();
-
-
-
-        self::$_revSliderJSON = array(
+         self::$_revSliderJSON = array(
             'rev_lang' => array(
                 'wrong_alias' => $this->l('-- wrong alias -- '),
                 'nav_bullet_arrows_to_none' => $this->l('Navigation Bullets and Arrows are now set to none.'),
@@ -141,76 +141,86 @@ class AdminRevolutionsliderNavigationController extends ModuleAdminController
                 'shortcode_could_not_be_correctly_parsed' => $this->l('Shortcode could not be parsed.')
             )
         );
+
     }
 
-    public function initContent()
-    {
-        $this->content .= $this->displayStats();
-        return parent::initContent();
-    }
-
-    public function setMedia()
+     public function setMedia()
     {
         parent::setMedia();
-        $this->addJqueryPlugin(array('fancybox', 'autocomplete'));
-
-        $nav = new RevSliderNavigation();
-
-        $navigs = $nav->getAllNavigations();
         
-        Media::addJsDef(array('rs_navigations' => $navigs));
+         $this->context->controller->addJqueryUI(array('ui.core'));
+         $this->context->controller->addJqueryPlugin('autocomplete');
+        $path_css = _MODULE_DIR_ . $this->module->name.'/admin/assets/css/';
+        $path_js = _MODULE_DIR_ . $this->module->name.'/admin/assets/js/';
+        $this->addCSS($path_css . 'admin.css'); 
+        $this->addCSS($path_css . 'tipsy.css'); 
+        $this->addCSS($path_css . 'colors.min.css'); 
+        $this->addCSS($path_css . 'edit_layers.css'); 
+        $this->addCSS($path_css . 'global.css'); 
+        $this->addCSS(_MODULE_DIR_ . $this->module->name  . '/public/assets/css/settings.css');  
         
-        $path_css = _MODULE_DIR_ . $this->module->name.'/views/css';
-        $path_js = _MODULE_DIR_ . $this->module->name.'/views/js';
-        
-        $this->addCSS($path_css . '/css/admin.css');
-        $this->addCSS($path_css . '/css/edit_layers.css');
-        $this->addCSS($path_css . '/css/load-styles.css');
-        $this->addCSS($path_css . '/css/tipsy.css');
-        $this->addCSS($path_js . '/js/farbtastic/farbtastic.css');
-        $this->addCSS($path_js . '/js/codemirror/codemirror.css');
-        $this->addCSS($path_css . '/rs-plugin/css/settings.css');
-
-
         Media::addJsDef(self::$_revSliderJSON);
-
-        $this->addJS($path_js . '/js/underscore.min.js');
-        $this->addJS($path_js . '/js/jquery.tipsy.js');
-        $this->addJS($path_js . '/js/jquery-ui-1.10.3.custom.js');
-
-        $this->addJS($path_js . '/js/codemirror/codemirror.js');
-        $this->addJS($path_js . '/js/codemirror/util/match-highlighter.js');
-        $this->addJS($path_js . '/js/codemirror/util/searchcursor.js');
-        $this->addJS($path_js . '/js/codemirror/css.js');
-        $this->addJS($path_js . '/js/codemirror/xml.js');
-
-        $this->addJS($path_js . '/js/farbtastic/farbtastic.js');
-
-        $this->addJS($path_js . '/js/settings.js');
-        $this->addJS($path_js . '/js/admin.js');
-        $this->addJS($path_js . '/js/edit_layers_timeline.js');
-        // $this->addJS(_MODULE_DIR_.$this->module->name.'/js/edit_layers.js');
-        $this->addJS($path_js . '/js/css_editor.js');
-        $this->addJS($path_js . '/js/rev_admin.js');
-        $this->addJS($path_js . '/rs-plugin/js/jquery.themepunch.tools.min.js');
+        $this->addCSS("//fonts.googleapis.com/css?family=Open+Sans:400,300,700,600,800");
+        $this->addCSS($path_css . 'thickbox.css'); 
+        $this->context->controller->addJqueryUI(array('ui.dialog'));
+        $this->addCSS($path_js . 'codemirror/codemirror.css'); 
+        $this->addCSS($path_css . 'color-picker.css'); 
+        $this->addCSS($path_css . 'tp-color-picker.css'); 
+        $this->addCSS(_MODULE_DIR_ . $this->module->name . '/public/assets/fonts/font-awesome/css/font-awesome.css'); 
+        $this->addCSS(_MODULE_DIR_ . $this->module->name . '/public/assets/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css'); 
+        $this->addCSS($path_css . 'demo.css'); 
+        
+        $this->addJS($path_js . 'jquery/core.min.js');
+        $this->addJS($path_js . 'underscore.min.js'); 
+        $this->context->controller->addJqueryUI(array('ui.widget'));
+        $this->context->controller->addJqueryUI(array('ui.mouse'));
+        $this->context->controller->addJqueryUI(array('ui.accordion'));
+        $this->context->controller->addJqueryUI(array('ui.datepicker'));
+        $this->context->controller->addJqueryUI(array('ui.slider'));
+        $this->context->controller->addJqueryUI(array('ui.menu'));
+         $this->context->controller->addJqueryUI(array('ui.autocomplete'));
+        $this->context->controller->addJqueryUI(array('ui.sortable'));
+        $this->context->controller->addJqueryUI(array('ui.droppable'));
+        $this->context->controller->addJqueryUI(array('ui.tabs'));
+        $this->addJS($path_js . 'color-picker.js');
+        $this->context->controller->addJqueryUI(array('ui.resizable'));
+        $this->context->controller->addJqueryUI(array('ui.draggable'));
+        $this->addJS($path_js . 'settings.js');
+        $this->addJS($path_js . 'admin.js');
+        $this->addJS($path_js . 'thickbox.js');
+        $this->addJS($path_js . 'jquery.tipsy.js');
+        $this->addJS($path_js . 'codemirror/codemirror.js'); 
+        $this->addJS($path_js . 'codemirror/util/match-highlighter.js');
+        $this->addJS($path_js . 'codemirror/util/searchcursor.js');
+        $this->addJS($path_js . 'codemirror/css.js');
+        $this->addJS($path_js . 'codemirror/xml.js');
+        $this->addJS($path_js . 'edit_layers_timeline.js');
+        $this->addJS($path_js . 'context_menu.js');
+        $this->addJS($path_js . 'edit_layers.js');
+        $this->addJS($path_js . 'css_editor.js');
+        $this->addJS($path_js . 'rev_admin.js');
+        $this->context->controller->addJqueryUI(array('ui.position'));
+        $this->addJS(_MODULE_DIR_ . $this->module->name  . '/public/assets/js/jquery.themepunch.tools.min.js');
+        $this->addJS(_MODULE_DIR_ . $this->module->name  . '/public/assets/js/tp-color-picker.min.js');
+        $this->addJS($path_js . '/js/jquery/iris.min.js'); 
+//         
     }
-
-    public function displayStats()
-    {
-        $tpl_path = _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/nagivation.tpl';
-
-        $rsopr = new RevSliderOperations();
-
-        $font_families = $rsopr->getArrFontFamilys();
-
-        $this->context->smarty->assign(array(
-            'module_name' => $this->module->name,
-            'font_families' => $font_families,
-            'g_uniteDirPlagin' => $this->module->name,
-            'g_urlContent' => UniteFunctionsWPRev::getUrlContent(),
-            'ajaxurl' => Context::getContext()->link->getAdminLink('AdminRevolutionsliderAjax'),
-            'ajaxurl_ext' => urlencode(htmlspecialchars_decode(admin_url()))
-        ));
-        return $this->context->smarty->fetch($tpl_path);
+    public function initContent(){
+      
+        $this->content = $this->displayHeader();
+        $this->content .=  $this->overview();
+        $this->content .=   $this->displayfooter();
+      
+        parent::initContent();
     }
+    public function overview() {
+        
+                ob_start(); 
+                $productAdmin = new RevSliderAdmin();
+                $output = ob_get_contents();
+                ob_end_clean();
+             //   die($output);
+                return $output;
+    }
+ 
 }

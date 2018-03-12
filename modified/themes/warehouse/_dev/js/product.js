@@ -32,6 +32,11 @@ $(document).ready(function () {
     imageScrollBox();
     createToolTip();
     accessoriesSidebarCarousel();
+    let $main = $('#main');
+
+    if (iqitTheme.pp_tabs == 'tabha') {
+        getAccordion("#product-infos-tabs", 576);
+    }
 
     $('body').on('click', '[data-button-action="add-to-cart"]', (event) => {
             event.preventDefault();
@@ -41,6 +46,10 @@ $(document).ready(function () {
 
     prestashop.on('updateCart', function (event) {
         $('.add-to-cart.processing-add').removeClass('processing-add');
+    });
+
+    prestashop.on('updateProduct', function (event) {
+        $main.addClass('-combinations-loading');
     });
 
     prestashop.on('updatedProduct', function (event) {
@@ -58,6 +67,10 @@ $(document).ready(function () {
         imageScrollBox();
         $($('.tabs .nav-link.active').attr('href')).addClass('active').removeClass('fade');
         $('.js-product-images-modal').replaceWith(event.product_images_modal);
+        $main.removeClass('-combinations-loading');
+
+        window.history.replaceState({ id_product_attribute: event.id_product_attribute }, undefined, event.product_url);
+
     });
 
     function coverImage() {
@@ -193,6 +206,49 @@ $(document).ready(function () {
 
         });
 
+    }
 
+    function getAccordion($element_id, screen)
+    {
+
+        let obj_tabs, obj_cont;
+
+        if ($(window).width() < screen)
+        {
+            var concat = '';
+            obj_tabs = $( $element_id + ' li').toArray();
+            obj_cont = $( '#product-infos-tabs-content' ).find('.tab-pane').toArray();
+            jQuery.each( obj_tabs, function( n, val )
+            {
+                concat += '<div class="card"><div class="nav-tabs" role="tab" >';
+                if(n > 0) {
+                    concat += '<a class="nav-link collapsed" id="ma-nav-link-' + n + '" data-toggle="collapse" data-parent="#product-infos-accordion-mobile" href="#product-infos-accordion-mobile-' + n + '">';
+                } else {
+                    concat += '<a class="nav-link" id="ma-nav-link-' + n + '" data-toggle="collapse" data-parent="#product-infos-accordion-mobile" href="#product-infos-accordion-mobile-' + n + '">';
+                }
+
+                concat += val.innerText + '' +
+                    '<i class="fa fa-angle-down float-right angle-down" aria-hidden="true"></i><i class="fa fa-angle-up float-right angle-up" aria-hidden="true"></i>' +
+                    '</a>';
+                concat += '</div>';
+                if(n > 0) {
+                    concat += '<div id="product-infos-accordion-mobile-' + n + '" class="collapse tab-content" role="tabpanel">';
+                } else {
+                    concat += '<div id="product-infos-accordion-mobile-' + n + '" class="collapse tab-content show" role="tabpanel">';
+                }
+                concat += '<div class="">' + obj_cont[n].innerHTML + '</div>';
+                concat += '</div>';
+            });
+
+            let $accordion = $("#product-infos-accordion-mobile");
+            $accordion.html(concat);
+            prestashop.iqitLazyLoad.update();
+            $($element_id).remove();
+            $('#product-infos-tabs-content').remove();
+
+        }
     }
 });
+
+
+

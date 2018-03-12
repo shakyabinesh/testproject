@@ -43,6 +43,15 @@
   {/block}
 {/block}
 
+{block name='head_og_tags'}
+    <meta property="og:title" content="{$page.meta.title}"/>
+    <meta property="og:url" content="http://{$smarty.server.HTTP_HOST}{$smarty.server.REQUEST_URI}"/>
+    <meta property="og:site_name" content="{$shop.name}"/>
+    <meta property="og:description" content="{$page.meta.description}">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="{$shop.logo}" />
+{/block}
+
 
 {block name='head_viewport'}
   {if $iqitTheme.rm_pinch_zoom == 1}
@@ -61,6 +70,12 @@
 {block name='head_icons'}
   <link rel="icon" type="image/vnd.microsoft.icon" href="{$shop.favicon}?{$shop.favicon_update_time}">
   <link rel="shortcut icon" type="image/x-icon" href="{$shop.favicon}?{$shop.favicon_update_time}">
+  {if isset($iqitTheme.rm_icon_apple) && $iqitTheme.rm_icon_apple != ''}
+    <link rel="apple-touch-icon" href="{$iqitTheme.rm_icon_apple }">
+  {/if}
+  {if isset($iqitTheme.rm_icon_android) && $iqitTheme.rm_icon_android != ''}
+    <link rel="icon" sizes="192x192" href="{$iqitTheme.rm_icon_android}">
+  {/if}
 {/block}
 
 {block name='hook_fonts'}
@@ -71,6 +86,7 @@
     <link href="{$iqitTheme.typo_hfont_g_url}" rel="stylesheet">
   {/if}
 {/block}
+
 
 {block name='stylesheets'}
   {include file="_partials/stylesheets.tpl" stylesheets=$stylesheets}

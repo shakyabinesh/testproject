@@ -171,7 +171,7 @@ class IqitContactPage extends Module implements WidgetInterface
                     ),
                     array(
                         'type' => 'textarea',
-                        'label' => $this->l('Cookie law text'),
+                        'label' => $this->l('Custom text'),
                         'name' => 'content',
                         'autoload_rte' => true,
                         'lang' => true,

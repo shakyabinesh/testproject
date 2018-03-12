@@ -5,7 +5,7 @@
         <div class="modal-content">
             {if $product}
             <div class="modal-header">
-                <span class="modal-title"><i class="fa fa-check"
+                <span class="modal-title"><i class="fa fa-check rtl-no-flip"
                                              aria-hidden="true"></i> {l s='Product successfully added to your shopping cart' d='Shop.Theme.Checkout'}</span>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

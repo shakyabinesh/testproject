@@ -15,7 +15,7 @@
 
 {if $block.hook == 'displayNav1' || $block.hook == 'displayNav2'}
     <div id="iqithtmlandbanners-block-{$block.id}"  class="d-inline-block">
-        <div class="rte-content">
+        <div class="rte-content d-inline-block">
             {$block.content nofilter}
         </div>
     </div>

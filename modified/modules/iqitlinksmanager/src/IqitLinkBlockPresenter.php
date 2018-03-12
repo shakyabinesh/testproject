@@ -48,9 +48,27 @@ class IqitLinkBlockPresenter
                 $content[$key]['data'] = $this->makeCmsCategoryLink($page['id']);
             } elseif ($page['type'] == 'cms_page') {
                 $content[$key]['data'] = $this->makeCmsPageLink($page['id']);
+            } elseif ($page['type'] == 'category') {
+                $content[$key]['data'] = $this->makeCategoryLink($page['id']);
             }
         }
         return $content;
+    }
+
+    private function makeCategoryLink($id)
+    {
+        $cmsLink = array();
+
+        $cat = new Category((int)$id);
+
+        if (null !== $cat->id) {
+            $cmsLink = array(
+                'title' => $cat->name[(int)$this->language->id],
+                'description' => $cat->meta_description[(int)$this->language->id],
+                'url' => $cat->getLink(),
+            );
+        }
+        return $cmsLink;
     }
 
     private function makeCmsPageLink($cmsId)

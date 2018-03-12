@@ -11,22 +11,36 @@
 
 $tabvalue = array(
     array(
-        'class_name' => 'AdminRevolutionslider',
-        'id_parent' => 0,
-        'module' => '',
+        'class_name' => 'AdminRevslider',
+        'id_parent' => '',
+        'module' => 'revsliderprestashop',
         'name' => 'Revolution Slider',
         'active' => 1,
     ),
     array(
-        'class_name' => 'AdminRevolutionsliderSettings',
-        'id_parent' => 'AdminRevolutionslider',
+        'class_name' => 'AdminRevsliderSliders',
+        'id_parent' => 'AdminRevslider',
         'module' => 'revsliderprestashop',
-        'name' => 'Configure',
+        'name' => 'Sliders',
+        'active' => 1,
+    ),
+    array(
+        'class_name' => 'AdminRevolutionsliderGlobalSettings',
+        'id_parent' => 'AdminRevslider',
+        'module' => 'revsliderprestashop',
+        'name' => 'Global Settings',
+        'active' => 1,
+    ),
+    array(
+        'class_name' => 'AdminRevolutionsliderAddons',
+        'id_parent' => 'AdminRevslider',
+        'module' => 'revsliderprestashop',
+        'name' => 'Addons',
         'active' => 1,
     ),
     array(
         'class_name' => 'AdminRevolutionsliderNavigation',
-        'id_parent' => 'AdminRevolutionslider',
+        'id_parent' => 'AdminRevslider',
         'module' => 'revsliderprestashop',
         'name' => 'Navigation',
         'active' => 1,
@@ -39,10 +53,10 @@ $tabvalue = array(
         'active' => 0,
     ),
     array(
-        'class_name' => 'AdminRevolutionsliderUpload',
+        'class_name' => 'AdminRevolutionsliderFmanager',
         'id_parent' => -1,
         'module' => 'revsliderprestashop',
-        'name' => 'Revolution Upload Manager',
+        'name' => 'Revolution File Manager',
         'active' => 0,
     ),
 );

@@ -3223,6 +3223,26 @@ class IqitThemeEditorForm
                     ),
                     array(
                         'type' => 'select',
+                        'label' => $this->module->l('Combination loading'),
+                        'desc' => $this->module->l('Show loading icon when combination is changed'),
+                        'name' => 'pp_preloader',
+                        'options' => array(
+                            'query' => array(
+                                array(
+                                    'id_option' => 1,
+                                    'name' => $this->module->l('Yes'),
+                                ),
+                                array(
+                                    'id_option' => 0,
+                                    'name' => $this->module->l('No'),
+                                ),
+                            ),
+                            'id' => 'id_option',
+                            'name' => 'name',
+                        ),
+                    ),
+                    array(
+                        'type' => 'select',
                         'label' => $this->module->l('Right sidebar'),
                         'name' => 'pp_sidebar',
                         'options' => array(
@@ -3269,7 +3289,26 @@ class IqitThemeEditorForm
                     ),
                     array(
                         'type' => 'select',
-                        'label' => $this->module->l('Mancufacturer position'),
+                        'label' => $this->module->l('Reference position'),
+                        'name' => 'pp_reference',
+                        'options' => array(
+                            'query' => array(
+                                array(
+                                    'id_option' => 'title',
+                                    'name' => $this->module->l('Below title'),
+                                ),
+                                array(
+                                    'id_option' => 'details',
+                                    'name' => $this->module->l('Details tab'),
+                                ),
+                            ),
+                            'id' => 'id_option',
+                            'name' => 'name',
+                        ),
+                    ),
+                    array(
+                        'type' => 'select',
+                        'label' => $this->module->l('Mancufacturer logo/name position'),
                         'name' => 'pp_man_logo',
                         'options' => array(
                             'query' => array(
@@ -3292,6 +3331,25 @@ class IqitThemeEditorForm
                     ),
                     array(
                         'type' => 'select',
+                        'label' => $this->module->l('Mancufacturer description tab'),
+                        'name' => 'pp_man_desc',
+                        'options' => array(
+                            'query' => array(
+                                array(
+                                    'id_option' => 1,
+                                    'name' => $this->module->l('Show'),
+                                ),
+                                array(
+                                    'id_option' => 0,
+                                    'name' => $this->module->l('Hide'),
+                                ),
+                            ),
+                            'id' => 'id_option',
+                            'name' => 'name',
+                        ),
+                    ),
+                    array(
+                        'type' => 'select',
                         'label' => $this->module->l('Details style'),
                         'name' => 'pp_tabs',
                         'options' => array(
@@ -3299,6 +3357,10 @@ class IqitThemeEditorForm
                                 array(
                                     'id_option' => 'tabh',
                                     'name' => $this->module->l('Tabs horizontal'),
+                                ),
+                                array(
+                                    'id_option' => 'tabha',
+                                    'name' => $this->module->l('Tabs horizontal, accordion on phones'),
                                 ),
                                 array(
                                     'id_option' => 'section',
@@ -3314,7 +3376,7 @@ class IqitThemeEditorForm
                         'label' => $this->module->l('Tabs title position'),
                         'name' => 'pp_tabs_position',
                         'condition' => array(
-                            'pp_tabs' => '<=tabh'
+                            'pp_tabs' => '<=tabh,tabha'
                         ),
                         'options' => array(
                             'query' => array(
@@ -3334,7 +3396,7 @@ class IqitThemeEditorForm
                     array(
                         'type' => 'info_text',
                         'condition' => array(
-                            'pp_tabs' => '<=tabh'
+                            'pp_tabs' => '<=tabh,tabha'
                         ),
                         'desc' => $this->module->l('Tabs design you set in Iqitthemeeditor > Content/pages > Content'),
                     ),
@@ -3935,6 +3997,20 @@ class IqitThemeEditorForm
                         'label' => $this->module->l('Retina logo'),
                         'desc' =>  $this->module->l('Retina ready logo should be twice bigger than logo uploaded in Preferences > themes'),
                         'name' =>  'rm_logo',
+                        'size' => 30,
+                    ),
+                    array(
+                        'type' => 'filemanager',
+                        'label' => $this->module->l('Apple touch icon'),
+                        'desc' =>  $this->module->l('Size: 180×180px, .png format'),
+                        'name' =>  'rm_icon_apple',
+                        'size' => 30,
+                    ),
+                    array(
+                        'type' => 'filemanager',
+                        'label' => $this->module->l('Android touch icon'),
+                        'desc' =>  $this->module->l('Size: 192×192px, .png format'),
+                        'name' =>  'rm_icon_android',
                         'size' => 30,
                     ),
                     array(

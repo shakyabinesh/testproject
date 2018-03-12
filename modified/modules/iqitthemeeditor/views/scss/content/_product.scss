@@ -33,6 +33,26 @@
   }
 }
 
+@if $pp_preloader == 1 {
+  #main{
+    #main-product-wrapper{
+      transition: opacity .3s ease;
+    }
+    &.-combinations-loading{
+      #product-preloader{
+        display: block;
+        position: absolute;
+        z-index: 10;
+        top: -10px;
+      }
+      #main-product-wrapper{
+        opacity: .3;
+      }
+    }
+
+  }
+}
+
 //tabs
 @if $pp_tabs_position == 'center' {
   .product-tabs .nav-tabs{

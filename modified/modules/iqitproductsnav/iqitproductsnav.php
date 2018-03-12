@@ -83,11 +83,23 @@ class IqitProductsNav extends Module implements WidgetInterface
         if (isset($next) && $next > 0) {
             $next = $this->context->link->getProductLink($next);
             $links['next'] = $next;
+        } else{
+            $first = $this->getFirstInCategory($position, $id_category_default);
+            if (isset($first) && $first > 0) {
+                $first = $this->context->link->getProductLink($first);
+                $links['next'] = $first;
+            }
         }
 
         if (isset($previous) && $previous > 0) {
             $previous = $this->context->link->getProductLink($previous);
             $links['previous'] = $previous;
+        } else{
+            $last = $this->getLastInCategory($position, $id_category_default);
+            if (isset($last) && $last > 0) {
+                $last = $this->context->link->getProductLink($last);
+                $links['previous'] = $last;
+            }
         }
         return $links;
     }
@@ -99,6 +111,37 @@ class IqitProductsNav extends Module implements WidgetInterface
             WHERE id_category = '.(int)$id_category.'
             AND id_product = '.(int)$id_product);
         return (int) $result['position'];
+    }
+
+    public function getFirstInCategory($position, $id_category)
+    {
+        $result = Db::getInstance()->getRow('SELECT cp.id_product as id_product
+            FROM `'._DB_PREFIX_.'category_product` as cp
+            RIGHT JOIN `'._DB_PREFIX_.'product` as p
+            ON p.id_product=cp.id_product
+            WHERE cp.id_category = '.(int)$id_category.'
+            AND p.active = 1
+            AND cp.position != '.(int)$position.' ORDER BY cp.position ASC');
+
+
+        if (isset($result['id_product']))
+            return (int) $result['id_product'];
+    }
+
+
+    public function getLastInCategory($position, $id_category)
+    {
+        $result = Db::getInstance()->getRow('SELECT cp.id_product as id_product
+            FROM `'._DB_PREFIX_.'category_product` as cp
+            RIGHT JOIN `'._DB_PREFIX_.'product` as p
+            ON p.id_product=cp.id_product
+            WHERE cp.id_category = '.(int)$id_category.'
+            AND p.active = 1
+            AND cp.position != '.(int)$position.' ORDER BY cp.position DESC');
+
+
+        if (isset($result['id_product']))
+            return (int) $result['id_product'];
     }
 
     public function getNextInCategory($position, $id_category)

@@ -26,7 +26,7 @@ import 'expose?Tether!tether';
 import 'bootstrap/dist/js/bootstrap.min';
 import 'flexibility';
 import 'bootstrap-touchspin';
-import 'slick-carousel/slick/slick.min';
+import 'slick-carousel/slick/slick';
 import 'waypoints/lib/jquery.waypoints.min';
 import 'waypoints/lib/shortcuts/sticky.min';
 

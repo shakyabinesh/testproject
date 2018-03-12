@@ -40,14 +40,15 @@
             </section>
         {/if}
 
-        <section id="product-details" class="product-details-section block-section" data-product="{$product.embedded_attributes|json_encode}">
+        <section id="product-details-wrapper" class="product-details-section block-section">
             <h4 class="section-title"><span>{l s='Product Details' d='Shop.Theme.Catalog'}</span></h4>
-
+            <div id="product-details" data-product="{$product.embedded_attributes|json_encode}">
             <div class="section-content">
                 {block name='product_details'}
                     {include file='catalog/_partials/product-details.tpl'}
                 {/block}
             </div>
+                </div>
         </section>
 
         {if $product.attachments}
@@ -97,6 +98,24 @@
                 </section>
             {/if}
         {/if}
+
+
+        {if $iqitTheme.pp_man_desc}
+        {if isset($product_manufacturer) && $product_manufacturer->description != ''}
+        <section class="product-brand-section block-section">
+            <h4 class="section-title"><span> {l s='About' d='Shop.Warehousetheme'} {$product_manufacturer->name}</span></h4>
+
+            <div class="section-content">
+                <div class="rte-content">
+                {$product_manufacturer->description nofilter}
+                </div>
+            </div>
+        </section>
+        {/if}
+        {/if}
+
+
+
 
         {foreach from=$product.extraContent item=extra key=extraKey}
             <section class="product-extracontent-section block-section {$extra.attr.class}" {foreach $extra.attr as $key => $val} {$key}="{$val}"{/foreach}>

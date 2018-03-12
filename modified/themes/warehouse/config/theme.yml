@@ -1,6 +1,6 @@
 name: warehouse
 display_name: Warehouse
-version: 4.1.5
+version: 4.1.6
 author:
   name: "IQIT COMMERCE"
   email: "support@iqit-commerce.com"
@@ -8,7 +8,7 @@ author:
 
 meta:
   compatibility:
-      from: 1.7.2.0
+      from: 1.7.3.0
       to: ~
 
   available_layouts:
@@ -197,6 +197,8 @@ theme_settings:
     best-sales: layout-left-column
     new-products: layout-left-column
     prices-drop: layout-left-column
+
+
 
 dependencies:
   modules:

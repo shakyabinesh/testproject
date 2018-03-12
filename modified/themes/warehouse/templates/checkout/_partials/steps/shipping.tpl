@@ -76,7 +76,7 @@
               <div class="mt-3">
                   <span class="custom-checkbox">
                 <input type="checkbox" id="input_recyclable" name="recyclable" value="1" {if $recyclable} checked {/if}>
-                <span><i class="fa fa-check checkbox-checked" aria-hidden="true"></i></span>
+                <span><i class="fa fa-check rtl-no-flip checkbox-checked" aria-hidden="true"></i></span>
                 <label for="input_recyclable">{l s='I would like to receive my order in recycled packaging.' d='Shop.Theme.Checkout'}</label>
               </span>
               </div>
@@ -87,7 +87,7 @@
                   <div class="mt-3">
                   <span class="custom-checkbox">
                 <input class="js-gift-checkbox" id="input_gift" name="gift" type="checkbox" value="1" {if $gift.isGift}checked="checked"{/if}>
-                <span><i class="fa fa-check checkbox-checked" aria-hidden="true"></i></span>
+                <span><i class="fa fa-check rtl-no-flip checkbox-checked" aria-hidden="true"></i></span>
                 <label for="input_gift">{$gift.label}</label >
               </span>
 

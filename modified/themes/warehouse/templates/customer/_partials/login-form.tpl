@@ -24,11 +24,16 @@
  *}
 {block name='login_form'}
 
+
+
+  {block name='login_form_start'}{/block}
+
+
   {block name='login_form_errors'}
     {include file='_partials/form-errors.tpl' errors=$errors['']}
   {/block}
 
-  <form id="login-form" action="{block name='login_form_actionurl'}{$action}{/block}" method="post">
+    <form {if isset($idForm)} id="{$idForm}" action="{$urls.pages.authentication}" {else} id="login-form" action="{block name='login_form_actionurl'}{$action}{/block}"  {/if}  method="post">
 
     <section>
       {block name='login_form_fields'}
@@ -49,7 +54,7 @@
       <footer class="form-footer text-center clearfix">
         <input type="hidden" name="submitLogin" value="1">
         {block name='form_buttons'}
-          <button class="btn btn-primary form-control-submit" data-link-action="sign-in" type="submit">
+          <button id="submit-login" class="btn btn-primary form-control-submit" data-link-action="sign-in" type="submit">
             {l s='Sign in' d='Shop.Theme.Actions'}
           </button>
         {/block}
@@ -57,4 +62,5 @@
     {/block}
 
   </form>
+  {block name='login_form_end'}{/block}
 {/block}

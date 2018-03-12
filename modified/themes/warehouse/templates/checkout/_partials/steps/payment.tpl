@@ -95,7 +95,7 @@
                         value = "1"
                         class = "ps-shown-by-js"
                 >
-                <span><i class="fa fa-check checkbox-checked" aria-hidden="true"></i></span>
+                <span><i class="fa fa-check rtl-no-flip checkbox-checked" aria-hidden="true"></i></span>
                   <label class="js-terms" for="conditions_to_approve[{$condition_name}]">
                 {$condition nofilter}
               </label>
